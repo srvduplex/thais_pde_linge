@@ -1,7 +1,11 @@
-"""Calcul du besoin en linge (Elis) a partir des reservations Thais et
-generation du mail de commande pour Le Plat d'Etain.
+"""Calcul du besoin en linge a partir des reservations Thais et generation du
+mail de commande pour un hotel donne. Le moteur est partage entre tous les
+hotels/fournisseurs ; ce qui differe (referentiel d'articles, dotation par
+categorie de chambre, coordonnees) vient d'un fichier de config.HotelConfig
+(voir config.py et configs/*.json).
 
-Regle de rotation (cf. echanges avec l'exploitant) :
+Regle de rotation (cf. echanges avec l'exploitant du Plat d'Etain — a
+confirmer/adapter pour tout autre hotel) :
 - Jour 1 du sejour (arrivee) = changement complet (lit + bain).
 - Tous les 4 jours ensuite (jour 5, 9, 13...) = nouvelle "mise a blanc"
   complete du LIT (draps/housses/taies), qui s'ajoute au changement de
@@ -27,58 +31,6 @@ import urllib.error
 import urllib.request
 
 
-# ---------------------------------------------------------------------------
-# Referentiel articles Elis
-# ---------------------------------------------------------------------------
-
-REFERENTIEL = {
-    # Draps plats
-    "1341": {"designation": "Drap Clas blc l.orang 180 NF", "dimension": "180x285", "liseret": "Orange", "section": "lit"},
-    "2941": {"designation": "Drap Clas blc l. noir 280 NF", "dimension": "280x285", "liseret": "Noir", "section": "lit"},
-    "11143": {"designation": "Drap Clas blc 2l. noir 310 NF", "dimension": "310x305", "liseret": "Double noir", "section": "lit"},
-    # Housses de couette
-    "41113": {"designation": "Housse Stella S l.anis blc NF", "dimension": "160x260", "liseret": "Anis", "section": "lit"},
-    "32830": {"designation": "Housse Stella S l.marron blc NF", "dimension": "230x260", "liseret": "Marron", "section": "lit"},
-    "41115": {"designation": "Housse Stella l. bleu marine NF", "dimension": "265x260", "liseret": "Bleu marine", "section": "lit"},
-    # Taies (fixes : 2 carrees + 2 rectangulaires par chambre a chaque changement complet)
-    "43128": {"designation": "Taie Car Clas l.vert 65x65", "dimension": "65x65", "liseret": "Vert", "section": "lit"},
-    "517": {"designation": "Taie Am Clas blc 50x80 NF", "dimension": "50x80", "liseret": "-", "section": "lit"},
-    # Linge de bain
-    "8786": {"designation": "Drap bain Confort blc", "dimension": "-", "liseret": "-", "section": "bain"},
-    "8785": {"designation": "Serv Eponge Confort blc", "dimension": "-", "liseret": "-", "section": "bain"},
-    "8787": {"designation": "Tapis bain Confort blc", "dimension": "-", "liseret": "-", "section": "bain"},
-    # Restaurant (quantites saisies manuellement)
-    "6735": {"designation": "Nappe 12x12", "dimension": "-", "liseret": "-", "section": "restaurant"},
-    "6739": {"designation": "Nappe 15x15", "dimension": "-", "liseret": "-", "section": "restaurant"},
-    "6820": {"designation": "Serviette de table", "dimension": "-", "liseret": "-", "section": "restaurant"},
-}
-
-# Categorie de chambre Thais -> categorie de literie interne.
-LABEL_TO_CATEGORIE = {
-    "Chambre Double Supérieur": "double",
-    "Chambre Double Classique": "double",
-    "Chambre Twin Classique": "twin",
-    "Chambre Triple": "triple",
-}
-
-# Linge de lit pose a chaque changement COMPLET (jour 1, 5, 9...), par categorie.
-DOTATION_LIT = {
-    "double": {"2941": 1, "32830": 1},
-    "twin": {"1341": 2, "41113": 2},
-    "triple": {"11143": 1, "1341": 1, "41115": 1, "41113": 1},
-}
-
-# Tapis de bain : lie au nombre de lits de la chambre, pose a chaque
-# changement (complet OU partiel), pas seulement a la mise a blanc.
-TAPIS_PAR_CATEGORIE = {"double": 1, "twin": 2, "triple": 2}
-
-# Oreillers : fixes, independants de la categorie et du nombre d'occupants,
-# poses uniquement lors d'un changement complet.
-TAIES_FIXES = {"43128": 2, "517": 2}
-
-BED_LINEN_CODES_LIT90 = {"1341", "41113"}  # drap 180 + housse anis : lit 90 des Triple
-
-
 def stay_night_kind(day_of_stay: int) -> str:
     """Jour 1 = arrivee. Renvoie 'full' (mise a blanc), 'partial' (serviette+tapis)
     ou 'none' selon le cycle 2 jours / 4 jours decrit dans le docstring du module."""
@@ -101,6 +53,7 @@ def compute_needs_from_bookings(
     bookings: list,
     date_from: datetime.date,
     date_to: datetime.date,
+    config,
     *,
     sans_bain: bool = False,
     sans_tapis: bool = False,
@@ -108,9 +61,10 @@ def compute_needs_from_bookings(
 ) -> dict:
     """Calcule le besoin en linge pour les nuits [date_from, date_to] (incluses),
     en tenant compte du jour de sejour reel de chaque reservation (meme si le
-    sejour a demarre avant date_from)."""
+    sejour a demarre avant date_from). `config` est un config.HotelConfig
+    (referentiel d'articles et dotation propres a l'hotel/fournisseur)."""
 
-    qty = {code: 0 for code in REFERENTIEL if REFERENTIEL[code]["section"] != "restaurant"}
+    qty = {code: 0 for code in config.referentiel if config.referentiel[code]["section"] != "restaurant"}
     window_end_exclusive = date_to + datetime.timedelta(days=1)
 
     for booking in bookings:
@@ -123,7 +77,7 @@ def compute_needs_from_bookings(
         for booking_room in booking.get("booking_rooms", []):
             room = booking_room.get("room") or {}
             room_type = room.get("room_type") or {}
-            categorie = LABEL_TO_CATEGORIE.get(room_type.get("label"))
+            categorie = config.label_to_categorie.get(room_type.get("label"))
             if categorie is None:
                 continue
 
@@ -140,13 +94,13 @@ def compute_needs_from_bookings(
                     continue
 
                 if kind == "full":
-                    dotation = dict(DOTATION_LIT[categorie])
+                    dotation = dict(config.dotation_lit[categorie])
                     if categorie == "triple" and triple_sans_90:
-                        for code in BED_LINEN_CODES_LIT90:
+                        for code in config.bed_linen_codes_lit90:
                             dotation.pop(code, None)
                     for code, unite in dotation.items():
                         qty[code] += unite
-                    for code, unite in TAIES_FIXES.items():
+                    for code, unite in config.taies_fixes.items():
                         qty[code] += unite
 
                 if not sans_bain:
@@ -155,7 +109,7 @@ def compute_needs_from_bookings(
                     qty["8786"] += occupants
                     qty["8785"] += occupants
                     if not sans_tapis:
-                        qty["8787"] += TAPIS_PAR_CATEGORIE[categorie]
+                        qty["8787"] += config.tapis_par_categorie[categorie]
 
     return qty
 
@@ -217,9 +171,9 @@ SECTION_TITLES = {
 }
 
 
-def _rows_by_section(quantities: dict):
+def _rows_by_section(quantities: dict, config):
     by_section = {"lit": [], "bain": [], "restaurant": []}
-    for code, article in REFERENTIEL.items():
+    for code, article in config.referentiel.items():
         qte = quantities.get(code, 0)
         if qte <= 0:
             continue
@@ -227,11 +181,11 @@ def _rows_by_section(quantities: dict):
     return by_section
 
 
-def build_recap_table(quantities: dict) -> str:
+def build_recap_table(quantities: dict, config) -> str:
     lines = [f"{'Code':<8}{'Designation':<36}{'Liseret/Lit':<18}{'Quantite':>8}"]
     lines.append("-" * 70)
     for section in ("lit", "bain", "restaurant"):
-        for code, article, qte in _rows_by_section(quantities)[section]:
+        for code, article, qte in _rows_by_section(quantities, config)[section]:
             detail = article["liseret"] if article["liseret"] != "-" else article["dimension"]
             lines.append(f"{code:<8}{article['designation']:<36}{detail:<18}{qte:>8}")
     return "\n".join(lines)
@@ -239,11 +193,14 @@ def build_recap_table(quantities: dict) -> str:
 
 def build_email_html(
     quantities: dict,
+    config,
     *,
-    footer_note: str = "Compte HT2 n° 244968 — tournée 89 — livraison vendredi.",
-    signature: str = "Mathieu Tarrade<br>HT2 SARL — Le Plat d'Étain<br>06 02 05 24 99",
+    footer_note: str = None,
+    signature: str = None,
 ) -> str:
-    sections = _rows_by_section(quantities)
+    footer_note = footer_note if footer_note is not None else config.footer_note
+    signature = signature if signature is not None else config.signature
+    sections = _rows_by_section(quantities, config)
     html = ["<div>"]
     for section in ("lit", "bain", "restaurant"):
         rows = sections[section]
@@ -342,11 +299,12 @@ def send_notification_email(
 # ---------------------------------------------------------------------------
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Commande linge Elis — Le Plat d'Étain")
+    parser = argparse.ArgumentParser(description="Commande linge — genere le besoin pour un hotel donne")
+    parser.add_argument("--config", required=True, metavar="FICHIER", help="Config hotel/fournisseur (configs/*.json)")
     parser.add_argument("--from-date", required=True, metavar="YYYY-MM-DD")
     parser.add_argument("--to-date", required=True, metavar="YYYY-MM-DD")
     parser.add_argument("--bookings-json", metavar="FICHIER", help="Reservations Thais deja telechargees (mode hors-ligne / test)")
-    parser.add_argument("--base-url", default="https://leplatdetain.thais-hotel.com")
+    parser.add_argument("--base-url", help="Sinon utilise base_url de la config")
     parser.add_argument("--username", help="Identifiant API Thais (sinon variable THAIS_USERNAME)")
     parser.add_argument("--password", help="Mot de passe API Thais (sinon variable THAIS_PASSWORD)")
     parser.add_argument("--sans-bain", action="store_true")
@@ -362,6 +320,11 @@ def main(argv=None):
     parser.add_argument("--snapshot-json", metavar="FICHIER", help="Sauvegarde les quantites commandees (hors restaurant) pour la verification nocturne")
     args = parser.parse_args(argv)
 
+    import config as cfg
+
+    hotel_config = cfg.load_config(args.config)
+    base_url = args.base_url or hotel_config.base_url
+
     date_from = datetime.date.fromisoformat(args.from_date)
     date_to = datetime.date.fromisoformat(args.to_date)
 
@@ -375,13 +338,14 @@ def main(argv=None):
         password = args.password or os.environ.get("THAIS_PASSWORD")
         if not username or not password:
             parser.error("--username/--password (ou THAIS_USERNAME/THAIS_PASSWORD) requis sans --bookings-json")
-        token = thais_login(args.base_url, username, password)
-        bookings = fetch_bookings(args.base_url, token, args.from_date, args.to_date)
+        token = thais_login(base_url, username, password)
+        bookings = fetch_bookings(base_url, token, args.from_date, args.to_date)
 
     quantities = compute_needs_from_bookings(
         bookings,
         date_from,
         date_to,
+        hotel_config,
         sans_bain=args.sans_bain,
         sans_tapis=args.sans_tapis,
         triple_sans_90=args.triple_sans_90,
@@ -402,10 +366,10 @@ def main(argv=None):
     quantities["6739"] = args.nappe_15x15
     quantities["6820"] = args.serviette_table
 
-    print(build_recap_table(quantities))
+    print(build_recap_table(quantities, hotel_config))
     print()
 
-    html = build_email_html(quantities)
+    html = build_email_html(quantities, hotel_config)
     print(html)
 
     if args.out_html:
@@ -425,7 +389,7 @@ def main(argv=None):
         smtp_to = os.environ.get("SMTP_TO", smtp_username)
         if not smtp_username or not smtp_app_password:
             parser.error("--notify-smtp requiert SMTP_USERNAME et SMTP_APP_PASSWORD dans l'environnement")
-        subject = f"[A copier vers Elis] Commande linge Elis — semaine du {args.from_date} au {args.to_date}"
+        subject = f"[A copier vers {hotel_config.supplier_name}] Commande linge {hotel_config.hotel_name} — semaine du {args.from_date} au {args.to_date}"
         send_notification_email(
             html,
             smtp_username=smtp_username,

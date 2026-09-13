@@ -1,6 +1,11 @@
 import datetime
+import os
 
+import config as cfg
 import verif_stock as vs
+
+ELIS_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "configs", "plat_detain_elis.json")
+CONFIG = cfg.load_config(ELIS_CONFIG_PATH)
 
 
 def test_active_friday_for_a_monday_is_last_fridays_date():
@@ -65,7 +70,7 @@ def test_any_at_risk_detects_whether_a_report_needs_an_alert():
 def test_build_status_email_html_shows_ras_when_nothing_at_risk():
     report = {"2941": {"ordered": 35, "current": 36, "delta": 1, "safety_stock": 7, "at_risk": False, "suggested_topup": 0}}
 
-    html = vs.build_status_email_html(report, window_from="2026-09-18", window_to="2026-09-24")
+    html = vs.build_status_email_html(report, CONFIG, window_from="2026-09-18", window_to="2026-09-24")
 
     assert "RAS" in html
     assert "2941" not in html  # pas de detail affiche quand tout va bien
@@ -77,7 +82,7 @@ def test_build_status_email_html_lists_at_risk_references():
         "8787": {"ordered": 41, "current": 41, "delta": 0, "safety_stock": 8, "at_risk": False, "suggested_topup": 0},
     }
 
-    html = vs.build_status_email_html(report, window_from="2026-09-18", window_to="2026-09-24")
+    html = vs.build_status_email_html(report, CONFIG, window_from="2026-09-18", window_to="2026-09-24")
 
     assert "2941" in html
     assert "Drap Clas blc l. noir 280 NF" in html

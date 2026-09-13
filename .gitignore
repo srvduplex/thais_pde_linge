@@ -9,3 +9,5 @@ login_response.json
 cron.log
 commande.html
 commande_*.html
+commande_*.json
+.env.*

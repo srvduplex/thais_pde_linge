@@ -1,0 +1,38 @@
+{
+  "hotel_name": "Le Plat d'Étain",
+  "base_url": "https://leplatdetain.thais-hotel.com",
+  "label_to_categorie": {
+    "Chambre Double Supérieur": "double",
+    "Chambre Double Classique": "double",
+    "Chambre Twin Classique": "twin",
+    "Chambre Triple": "triple"
+  },
+  "referentiel": {
+    "1341": {"designation": "Drap Clas blc l.orang 180 NF", "dimension": "180x285", "liseret": "Orange", "section": "lit"},
+    "2941": {"designation": "Drap Clas blc l. noir 280 NF", "dimension": "280x285", "liseret": "Noir", "section": "lit"},
+    "11143": {"designation": "Drap Clas blc 2l. noir 310 NF", "dimension": "310x305", "liseret": "Double noir", "section": "lit"},
+    "41113": {"designation": "Housse Stella S l.anis blc NF", "dimension": "160x260", "liseret": "Anis", "section": "lit"},
+    "32830": {"designation": "Housse Stella S l.marron blc NF", "dimension": "230x260", "liseret": "Marron", "section": "lit"},
+    "41115": {"designation": "Housse Stella l. bleu marine NF", "dimension": "265x260", "liseret": "Bleu marine", "section": "lit"},
+    "43128": {"designation": "Taie Car Clas l.vert 65x65", "dimension": "65x65", "liseret": "Vert", "section": "lit"},
+    "517": {"designation": "Taie Am Clas blc 50x80 NF", "dimension": "50x80", "liseret": "-", "section": "lit"},
+    "8786": {"designation": "Drap bain Confort blc", "dimension": "-", "liseret": "-", "section": "bain"},
+    "8785": {"designation": "Serv Eponge Confort blc", "dimension": "-", "liseret": "-", "section": "bain"},
+    "8787": {"designation": "Tapis bain Confort blc", "dimension": "-", "liseret": "-", "section": "bain"},
+    "6735": {"designation": "Nappe 12x12", "dimension": "-", "liseret": "-", "section": "restaurant"},
+    "6739": {"designation": "Nappe 15x15", "dimension": "-", "liseret": "-", "section": "restaurant"},
+    "6820": {"designation": "Serviette de table", "dimension": "-", "liseret": "-", "section": "restaurant"}
+  },
+  "dotation_lit": {
+    "double": {"2941": 1, "32830": 1},
+    "twin": {"1341": 2, "41113": 2},
+    "triple": {"11143": 1, "1341": 1, "41115": 1, "41113": 1}
+  },
+  "tapis_par_categorie": {"double": 1, "twin": 2, "triple": 2},
+  "taies_fixes": {"43128": 2, "517": 2},
+  "bed_linen_codes_lit90": ["1341", "41113"],
+  "footer_note": "Compte HT2 n° 244968 — tournée 89 — livraison vendredi.",
+  "signature": "Mathieu Tarrade<br>HT2 SARL — Le Plat d'Étain<br>06 02 05 24 99",
+  "supplier_name": "Elis",
+  "supplier_to_email": "pauline.padovan@elis.com"
+}

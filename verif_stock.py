@@ -12,7 +12,6 @@ import json
 import os
 
 from linge_commande import (
-    REFERENTIEL,
     compute_needs_from_bookings,
     fetch_bookings,
     thais_login,
@@ -55,7 +54,7 @@ def any_at_risk(report: dict) -> bool:
     return any(entry["at_risk"] for entry in report.values())
 
 
-def build_status_email_html(report: dict, *, window_from: str, window_to: str) -> str:
+def build_status_email_html(report: dict, config, *, window_from: str, window_to: str) -> str:
     at_risk_codes = [code for code, entry in report.items() if entry["at_risk"]]
 
     html = [f"<div><p>Fenetre de stock en cours : {window_from} au {window_to}.</p>"]
@@ -73,7 +72,7 @@ def build_status_email_html(report: dict, *, window_from: str, window_to: str) -
     html.append("<tr><th>Code</th><th>Désignation</th><th>Commandé</th><th>Besoin actuel</th><th>Delta</th><th>Stock sécurité</th><th>Complément suggéré</th></tr>")
     for code in at_risk_codes:
         entry = report[code]
-        designation = REFERENTIEL.get(code, {}).get("designation", code)
+        designation = config.referentiel.get(code, {}).get("designation", code)
         html.append(
             f"<tr><td>{code}</td><td>{designation}</td><td>{entry['ordered']}</td>"
             f"<td>{entry['current']}</td><td>+{entry['delta']}</td><td>{entry['safety_stock']}</td>"
@@ -85,15 +84,21 @@ def build_status_email_html(report: dict, *, window_from: str, window_to: str) -
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Verification nocturne du stock de linge — Le Plat d'Étain")
+    parser = argparse.ArgumentParser(description="Verification nocturne du stock de linge")
+    parser.add_argument("--config", required=True, metavar="FICHIER", help="Config hotel/fournisseur (configs/*.json)")
     parser.add_argument("--snapshot-json", required=True, metavar="FICHIER", help="Snapshot de la commande du lundi (--snapshot-json de linge_commande.py)")
     parser.add_argument("--bookings-json", metavar="FICHIER", help="Reservations Thais deja telechargees (mode hors-ligne / test)")
-    parser.add_argument("--base-url", default="https://leplatdetain.thais-hotel.com")
+    parser.add_argument("--base-url", help="Sinon utilise base_url de la config")
     parser.add_argument("--username", help="Identifiant API Thais (sinon variable THAIS_USERNAME)")
     parser.add_argument("--password", help="Mot de passe API Thais (sinon variable THAIS_PASSWORD)")
     parser.add_argument("--safety-stock-pct", type=float, default=0.20)
     parser.add_argument("--notify-smtp", action="store_true")
     args = parser.parse_args(argv)
+
+    import config as cfg
+
+    hotel_config = cfg.load_config(args.config)
+    base_url = args.base_url or hotel_config.base_url
 
     with open(args.snapshot_json, encoding="utf-8") as f:
         snapshot = json.load(f)
@@ -109,17 +114,17 @@ def main(argv=None):
         password = args.password or os.environ.get("THAIS_PASSWORD")
         if not username or not password:
             parser.error("--username/--password (ou THAIS_USERNAME/THAIS_PASSWORD) requis sans --bookings-json")
-        token = thais_login(args.base_url, username, password)
-        bookings = fetch_bookings(args.base_url, token, snapshot["from_date"], snapshot["to_date"])
+        token = thais_login(base_url, username, password)
+        bookings = fetch_bookings(base_url, token, snapshot["from_date"], snapshot["to_date"])
 
-    current_quantities = compute_needs_from_bookings(bookings, date_from, date_to)
+    current_quantities = compute_needs_from_bookings(bookings, date_from, date_to, hotel_config)
     report = compute_delta_report(snapshot["quantities"], current_quantities, safety_stock_pct=args.safety_stock_pct)
 
     for code, entry in report.items():
         flag = " /!\\ A RISQUE" if entry["at_risk"] else ""
         print(f"{code}: commande={entry['ordered']} actuel={entry['current']} delta=+{entry['delta']} stock_secu={entry['safety_stock']}{flag}")
 
-    html = build_status_email_html(report, window_from=snapshot["from_date"], window_to=snapshot["to_date"])
+    html = build_status_email_html(report, hotel_config, window_from=snapshot["from_date"], window_to=snapshot["to_date"])
     print()
     print(html)
 
@@ -134,7 +139,7 @@ def main(argv=None):
             parser.error("--notify-smtp requiert SMTP_USERNAME et SMTP_APP_PASSWORD dans l'environnement")
 
         status = "ALERTE stock" if any_at_risk(report) else "RAS"
-        subject = f"[{status}] Verif stock linge 22h — semaine du {snapshot['from_date']} au {snapshot['to_date']}"
+        subject = f"[{status}] Verif stock linge 22h {hotel_config.hotel_name} — semaine du {snapshot['from_date']} au {snapshot['to_date']}"
         send_notification_email(
             html,
             smtp_username=smtp_username,
