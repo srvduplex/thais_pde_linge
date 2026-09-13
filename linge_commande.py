@@ -305,6 +305,38 @@ def create_gmail_draft(html_body: str, to: str = "pauline.padovan@elis.com", sub
     return draft["id"]
 
 
+def send_notification_email(
+    html_body: str,
+    *,
+    smtp_username: str,
+    smtp_app_password: str,
+    from_addr: str,
+    to_addr: str,
+    subject: str,
+    smtp_host: str = "smtp.gmail.com",
+    smtp_port: int = 587,
+) -> None:
+    """Envoie (immediatement, pas un brouillon) un email recapitulatif a soi-meme,
+    pret a copier-coller dans un nouveau message a Elis. Authentification SMTP
+    avec un mot de passe d'application ; from_addr peut etre un alias "Envoyer en
+    tant que" verifie sur le compte smtp_username, Gmail l'honorera alors."""
+
+    import smtplib
+    import ssl
+    from email.mime.text import MIMEText
+
+    message = MIMEText(html_body, "html")
+    message["Subject"] = subject
+    message["From"] = from_addr
+    message["To"] = to_addr
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP(smtp_host, smtp_port) as server:
+        server.starttls(context=context)
+        server.login(smtp_username, smtp_app_password)
+        server.sendmail(from_addr, [to_addr], message.as_string())
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -324,7 +356,8 @@ def main(argv=None):
     parser.add_argument("--nappe-12x12", type=int, default=0)
     parser.add_argument("--nappe-15x15", type=int, default=0)
     parser.add_argument("--serviette-table", type=int, default=0)
-    parser.add_argument("--draft", action="store_true", help="Cree directement le brouillon Gmail")
+    parser.add_argument("--draft", action="store_true", help="Cree directement le brouillon Gmail (necessite credentials.json/token.json)")
+    parser.add_argument("--notify-smtp", action="store_true", help="Envoie un email recap a soi-meme par SMTP (SMTP_USERNAME/SMTP_APP_PASSWORD/SMTP_FROM/SMTP_TO)")
     parser.add_argument("--out-html", metavar="FICHIER", help="Sauvegarde le corps HTML dans un fichier")
     args = parser.parse_args(argv)
 
@@ -372,6 +405,26 @@ def main(argv=None):
     if args.draft:
         draft_id = create_gmail_draft(html)
         print(f"\nBrouillon Gmail cree : {draft_id}")
+
+    if args.notify_smtp:
+        import os
+
+        smtp_username = os.environ.get("SMTP_USERNAME")
+        smtp_app_password = os.environ.get("SMTP_APP_PASSWORD")
+        smtp_from = os.environ.get("SMTP_FROM", smtp_username)
+        smtp_to = os.environ.get("SMTP_TO", smtp_username)
+        if not smtp_username or not smtp_app_password:
+            parser.error("--notify-smtp requiert SMTP_USERNAME et SMTP_APP_PASSWORD dans l'environnement")
+        subject = f"[A copier vers Elis] Commande linge Elis — semaine du {args.from_date} au {args.to_date}"
+        send_notification_email(
+            html,
+            smtp_username=smtp_username,
+            smtp_app_password=smtp_app_password,
+            from_addr=smtp_from,
+            to_addr=smtp_to,
+            subject=subject,
+        )
+        print(f"\nEmail recap envoye a {smtp_to} (from {smtp_from})")
 
 
 if __name__ == "__main__":

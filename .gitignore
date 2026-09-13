@@ -5,3 +5,7 @@ token.json
 credentials.json
 login_response.json
 *.env
+.env
+cron.log
+commande.html
+commande_*.html
