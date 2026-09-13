@@ -44,8 +44,7 @@ normalement via `label_to_categorie`, sans besoin d'override
 | Chambre | Taille de lit |
 |---|---|
 | 5, 11, 14, 15 | 140 |
-| 12 | 160 |
-| 6 | **à confirmer** |
+| 12, 6 | 160 |
 | 3, 10 | 140 |
 | 2, 4, 8 | Triple (160 + 90) |
 | 1, 9 | Twin (2× 90) |
@@ -78,8 +77,7 @@ PPE/PCE/contribution énergie/abonnement — pas du linge.)
 
 ## Points ouverts (à ne pas deviner)
 
-1. **Chambre 6** : taille de lit (140 ou 160 ?) — pas encore répondu.
-2. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
+1. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
    par Mathieu avec les codes exacts) —
    - drap 0040BF (180×320) + housse 1532AN (160×260) = jeu "double" (140 et/ou 160 ?)
    - drap 0050BE (240×320) + housse 1533AN1 (265×280, noir) = jeu "combo" pour
@@ -87,11 +85,11 @@ PPE/PCE/contribution énergie/abonnement — pas du linge.)
      "265 bleu marine" d'Elis au Plat d'Étain
    - Reste à savoir comment les chambres Twin (2 lits 90 séparés) sont couvertes
      (même jeu que le double, par lit ? autre chose ?)
-3. **Une seule taille de taie (68×68 carrée)** apparaît sur les factures — pas
+2. **Une seule taille de taie (68×68 carrée)** apparaît sur les factures — pas
    de taie rectangulaire comme chez Elis. Mathieu avait dit "4 oreillers
    (carré+rectangle) comme au PDE" : la taie rectangulaire vient-elle d'ailleurs
    (pas Anett), ou est-ce en fait 4× la même taie carrée ici ?
-4. **Lit d'appoint (>3 occupants → 90×190)** : le moteur supporte déjà
+3. **Lit d'appoint (>3 occupants → 90×190)** : le moteur supporte déjà
    `extra_bed_threshold`/`extra_bed_dotation` (voir `config.py`), mais les codes
    Anett exacts pour ce lit d'appoint restent à préciser.
 
