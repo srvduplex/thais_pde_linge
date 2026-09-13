@@ -11,3 +11,4 @@ commande.html
 commande_*.html
 commande_*.json
 .env.*
+doc/
