@@ -11,7 +11,7 @@ ELIS_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "configs", "plat_deta
 CONFIG = cfg.load_config(ELIS_CONFIG_PATH)
 
 
-def _booking(start_at, end_at, categorie_label, adults=2, children=0, canceled=False, no_show=False):
+def _booking(start_at, end_at, categorie_label, adults=2, children=0, canceled=False, no_show=False, room_label=None):
     return {
         "start_at": start_at,
         "end_at": end_at,
@@ -20,7 +20,7 @@ def _booking(start_at, end_at, categorie_label, adults=2, children=0, canceled=F
         "booking_rooms": [
             {
                 "nb_persons": {"adults": adults, "children": children, "infants": 0},
-                "room": {"room_type": {"label": categorie_label}},
+                "room": {"label": room_label, "room_type": {"label": categorie_label}},
             }
         ],
     }
@@ -101,6 +101,86 @@ def test_unmapped_room_category_is_skipped_without_crashing():
     )
 
     assert all(value == 0 for value in qty.values())
+
+
+def test_room_label_override_takes_priority_over_room_type_category():
+    # Meme categorie Thais ("Chambre Double") mais deux chambres au numero
+    # associees a des tailles de lit differentes (cas Bois-Guibert : 140 vs 160).
+    config_with_override = cfg.HotelConfig(
+        **{**CONFIG.__dict__, "room_label_to_categorie": {"Chambre 5": "double", "Chambre 6": "twin"}}
+    )
+    bookings = [
+        _booking("2026-09-13", "2026-09-14", "Chambre Double", adults=2, room_label="Chambre 5"),
+        _booking("2026-09-13", "2026-09-14", "Chambre Double", adults=2, room_label="Chambre 6"),
+    ]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config_with_override
+    )
+
+    assert qty["2941"] == 1  # Chambre 5 -> double -> drap 280
+    assert qty["1341"] == 2  # Chambre 6 -> twin -> 2x drap 180
+
+
+def test_room_label_not_in_override_falls_back_to_room_type_category():
+    config_with_override = cfg.HotelConfig(
+        **{**CONFIG.__dict__, "room_label_to_categorie": {"Chambre 5": "twin"}}
+    )
+    bookings = [_booking("2026-09-13", "2026-09-14", "Chambre Double Supérieur", adults=2, room_label="Chambre 99")]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config_with_override
+    )
+
+    assert qty["2941"] == 1  # pas de chevauchement -> retombe sur la categorie Thais "double"
+
+
+def test_extra_bed_added_when_occupants_exceed_threshold_on_full_night():
+    config_with_extra_bed = cfg.HotelConfig(
+        **{
+            **CONFIG.__dict__,
+            "extra_bed_threshold": 3,
+            "extra_bed_dotation": {"1341": 1, "41113": 1},
+        }
+    )
+    bookings = [_booking("2026-09-13", "2026-09-14", "Chambre Triple", adults=4)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config_with_extra_bed
+    )
+
+    # dotation triple de base (11143:1, 1341:1, 41115:1, 41113:1) + lit d'appoint (1341:1, 41113:1)
+    assert qty["1341"] == 2
+    assert qty["41113"] == 2
+    assert qty["11143"] == 1  # inchange (pas dans la dotation du lit d'appoint)
+
+
+def test_extra_bed_not_added_when_occupants_at_or_below_threshold():
+    config_with_extra_bed = cfg.HotelConfig(
+        **{
+            **CONFIG.__dict__,
+            "extra_bed_threshold": 3,
+            "extra_bed_dotation": {"1341": 1, "41113": 1},
+        }
+    )
+    bookings = [_booking("2026-09-13", "2026-09-14", "Chambre Triple", adults=3)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config_with_extra_bed
+    )
+
+    assert qty["1341"] == 1  # pas de lit d'appoint, dotation triple de base seulement
+
+
+def test_extra_bed_ignored_when_config_has_no_threshold():
+    # CONFIG (Plat d'Etain) n'a pas de regle de lit d'appoint : comportement inchange.
+    bookings = [_booking("2026-09-13", "2026-09-14", "Chambre Triple", adults=4)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), CONFIG
+    )
+
+    assert qty["1341"] == 1  # dotation triple de base uniquement
 
 
 def test_triple_sans_90_removes_lit90_bed_linen_only_on_full_nights():

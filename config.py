@@ -15,11 +15,14 @@ class HotelConfig:
     hotel_name: str
     base_url: str
     label_to_categorie: dict
+    room_label_to_categorie: dict
     referentiel: dict
     dotation_lit: dict
     tapis_par_categorie: dict
     taies_fixes: dict
     bed_linen_codes_lit90: set
+    extra_bed_threshold: int | None
+    extra_bed_dotation: dict
     footer_note: str
     signature: str
     supplier_name: str
@@ -34,11 +37,14 @@ def load_config(path: str) -> HotelConfig:
         hotel_name=data["hotel_name"],
         base_url=data["base_url"],
         label_to_categorie=data["label_to_categorie"],
+        room_label_to_categorie=data.get("room_label_to_categorie", {}),
         referentiel=data["referentiel"],
         dotation_lit=data["dotation_lit"],
         tapis_par_categorie=data["tapis_par_categorie"],
         taies_fixes=data["taies_fixes"],
         bed_linen_codes_lit90=set(data["bed_linen_codes_lit90"]),
+        extra_bed_threshold=data.get("extra_bed_threshold"),
+        extra_bed_dotation=data.get("extra_bed_dotation", {}),
         footer_note=data["footer_note"],
         signature=data["signature"],
         supplier_name=data["supplier_name"],

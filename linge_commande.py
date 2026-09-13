@@ -77,7 +77,9 @@ def compute_needs_from_bookings(
         for booking_room in booking.get("booking_rooms", []):
             room = booking_room.get("room") or {}
             room_type = room.get("room_type") or {}
-            categorie = config.label_to_categorie.get(room_type.get("label"))
+            categorie = config.room_label_to_categorie.get(room.get("label"))
+            if categorie is None:
+                categorie = config.label_to_categorie.get(room_type.get("label"))
             if categorie is None:
                 continue
 
@@ -102,6 +104,9 @@ def compute_needs_from_bookings(
                         qty[code] += unite
                     for code, unite in config.taies_fixes.items():
                         qty[code] += unite
+                    if config.extra_bed_threshold is not None and occupants > config.extra_bed_threshold:
+                        for code, unite in config.extra_bed_dotation.items():
+                            qty[code] += unite
 
                 if not sans_bain:
                     # drap de bain = grande serviette : meme cycle 2 jours que
