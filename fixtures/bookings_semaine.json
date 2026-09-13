@@ -1,0 +1,770 @@
+[
+  {
+    "start_at": "2026-09-15",
+    "end_at": "2026-09-17",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-18",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Triple"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      },
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-14",
+    "end_at": "2026-09-15",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-16",
+    "end_at": "2026-09-17",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      },
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-11",
+    "end_at": "2026-09-14",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Triple"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Twin Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-11",
+    "end_at": "2026-09-14",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-15",
+    "end_at": "2026-09-16",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-15",
+    "end_at": "2026-09-16",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-11",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-16",
+    "end_at": "2026-09-17",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-11",
+    "end_at": "2026-09-13",
+    "canceled": true,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-18",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-13",
+    "end_at": "2026-09-14",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      },
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-18",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-16",
+    "end_at": "2026-09-17",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-19",
+    "end_at": "2026-09-20",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 3,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Triple"
+          }
+        }
+      },
+      {
+        "nb_persons": {
+          "adults": 3,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Triple"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-13",
+    "end_at": "2026-09-14",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-11",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Triple"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-16",
+    "end_at": "2026-09-17",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-14",
+    "end_at": "2026-09-18",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-14",
+    "end_at": "2026-09-16",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 0,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Salle de séminaire"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-12",
+    "end_at": "2026-09-13",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Classique"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "start_at": "2026-09-13",
+    "end_at": "2026-09-14",
+    "canceled": false,
+    "no_show": false,
+    "booking_rooms": [
+      {
+        "nb_persons": {
+          "adults": 1,
+          "children": 0,
+          "infants": 0
+        },
+        "room": {
+          "room_type": {
+            "label": "Chambre Double Supérieur"
+          }
+        }
+      }
+    ]
+  }
+]
