@@ -77,6 +77,12 @@ PPE/PCE/contribution énergie/abonnement — pas du linge.)
 
 ## Points ouverts (à ne pas deviner)
 
+**En attente de réponse de Gwennaëlle (gwennaelle@bois-guibert.com)** — email
+envoyé le 13/09/2026 (thread Gmail `1a09c3226f649427`) avec le tableau
+drap/housse par config de lit + la question sur les taies. Ne pas relancer
+la question tant qu'on n'a pas sa réponse ou qu'on ne l'a pas relancée
+explicitement.
+
 1. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
    par Mathieu avec les codes exacts) —
    - drap 0040BF (180×320) + housse 1532AN (160×260) = jeu "double" (140 et/ou 160 ?)
