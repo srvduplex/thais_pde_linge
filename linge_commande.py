@@ -359,6 +359,7 @@ def main(argv=None):
     parser.add_argument("--draft", action="store_true", help="Cree directement le brouillon Gmail (necessite credentials.json/token.json)")
     parser.add_argument("--notify-smtp", action="store_true", help="Envoie un email recap a soi-meme par SMTP (SMTP_USERNAME/SMTP_APP_PASSWORD/SMTP_FROM/SMTP_TO)")
     parser.add_argument("--out-html", metavar="FICHIER", help="Sauvegarde le corps HTML dans un fichier")
+    parser.add_argument("--snapshot-json", metavar="FICHIER", help="Sauvegarde les quantites commandees (hors restaurant) pour la verification nocturne")
     args = parser.parse_args(argv)
 
     date_from = datetime.date.fromisoformat(args.from_date)
@@ -387,6 +388,15 @@ def main(argv=None):
     )
     if args.stock:
         quantities = apply_stock(quantities, args.stock)
+
+    if args.snapshot_json:
+        with open(args.snapshot_json, "w", encoding="utf-8") as f:
+            json.dump(
+                {"from_date": args.from_date, "to_date": args.to_date, "quantities": quantities},
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
 
     quantities["6735"] = args.nappe_12x12
     quantities["6739"] = args.nappe_15x15

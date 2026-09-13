@@ -23,4 +23,5 @@ python3 linge_commande.py \
   --from-date "${DATE_FROM}" \
   --to-date "${DATE_TO}" \
   --notify-smtp \
-  --out-html "commande_${DATE_FROM}.html"
+  --out-html "commande_${DATE_FROM}.html" \
+  --snapshot-json "commande_${DATE_FROM}.json"
