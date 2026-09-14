@@ -134,7 +134,9 @@ def main(argv=None):
         smtp_username = os.environ.get("SMTP_USERNAME")
         smtp_app_password = os.environ.get("SMTP_APP_PASSWORD")
         smtp_from = os.environ.get("SMTP_FROM", smtp_username)
-        smtp_to = os.environ.get("SMTP_TO", smtp_username)
+        # Alerte interne (stock a risque) : distinct de SMTP_TO qui, depuis le
+        # passage a l'envoi direct fournisseur, sert a la commande hebdomadaire.
+        smtp_to = os.environ.get("ALERT_SMTP_TO", smtp_username)
         if not smtp_username or not smtp_app_password:
             parser.error("--notify-smtp requiert SMTP_USERNAME et SMTP_APP_PASSWORD dans l'environnement")
 

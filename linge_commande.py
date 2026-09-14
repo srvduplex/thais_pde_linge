@@ -275,11 +275,12 @@ def send_notification_email(
     from_addr: str,
     to_addr: str,
     subject: str,
+    cc_addr: str = None,
     smtp_host: str = "smtp.gmail.com",
     smtp_port: int = 587,
 ) -> None:
-    """Envoie (immediatement, pas un brouillon) un email recapitulatif a soi-meme,
-    pret a copier-coller dans un nouveau message a Elis. Authentification SMTP
+    """Envoie (immediatement, pas un brouillon) un email par SMTP. to_addr/cc_addr
+    acceptent plusieurs adresses separees par des virgules. Authentification SMTP
     avec un mot de passe d'application ; from_addr peut etre un alias "Envoyer en
     tant que" verifie sur le compte smtp_username, Gmail l'honorera alors."""
 
@@ -291,12 +292,17 @@ def send_notification_email(
     message["Subject"] = subject
     message["From"] = from_addr
     message["To"] = to_addr
+    if cc_addr:
+        message["Cc"] = cc_addr
+
+    to_list = [addr.strip() for addr in to_addr.split(",") if addr.strip()]
+    cc_list = [addr.strip() for addr in cc_addr.split(",") if addr.strip()] if cc_addr else []
 
     context = ssl.create_default_context()
     with smtplib.SMTP(smtp_host, smtp_port) as server:
         server.starttls(context=context)
         server.login(smtp_username, smtp_app_password)
-        server.sendmail(from_addr, [to_addr], message.as_string())
+        server.sendmail(from_addr, to_list + cc_list, message.as_string())
 
 
 # ---------------------------------------------------------------------------
@@ -392,18 +398,21 @@ def main(argv=None):
         smtp_app_password = os.environ.get("SMTP_APP_PASSWORD")
         smtp_from = os.environ.get("SMTP_FROM", smtp_username)
         smtp_to = os.environ.get("SMTP_TO", smtp_username)
+        smtp_cc = os.environ.get("SMTP_CC")
         if not smtp_username or not smtp_app_password:
             parser.error("--notify-smtp requiert SMTP_USERNAME et SMTP_APP_PASSWORD dans l'environnement")
-        subject = f"[A copier vers {hotel_config.supplier_name}] Commande linge {hotel_config.hotel_name} — semaine du {args.from_date} au {args.to_date}"
+        subject = f"Commande linge {hotel_config.hotel_name} — semaine du {args.from_date} au {args.to_date}"
         send_notification_email(
             html,
             smtp_username=smtp_username,
             smtp_app_password=smtp_app_password,
             from_addr=smtp_from,
+            cc_addr=smtp_cc,
             to_addr=smtp_to,
             subject=subject,
         )
-        print(f"\nEmail recap envoye a {smtp_to} (from {smtp_from})")
+        cc_note = f", cc {smtp_cc}" if smtp_cc else ""
+        print(f"\nEmail envoye a {smtp_to}{cc_note} (from {smtp_from})")
 
 
 if __name__ == "__main__":
