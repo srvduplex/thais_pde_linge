@@ -140,6 +140,13 @@ def apply_stock(quantities: dict, stock_path: str) -> dict:
     return result
 
 
+def is_order_empty(quantities: dict) -> bool:
+    """True si aucune reference n'a de quantite positive (rien a commander,
+    ex. pendant une fermeture saisonniere)."""
+
+    return all(qty <= 0 for qty in quantities.values())
+
+
 def apply_minimum_order(quantities: dict, minimum: int) -> dict:
     """Remonte toute quantite strictement positive au minimum de commande du
     fournisseur ; les references a 0 (aucun besoin) restent a 0."""
@@ -425,6 +432,10 @@ def main(argv=None):
     if args.out_html:
         with open(args.out_html, "w", encoding="utf-8") as f:
             f.write(html)
+
+    if is_order_empty(quantities):
+        print("\nCommande entierement vide (0 sur toutes les references) — aucun envoi (--draft/--notify-smtp ignores).")
+        return
 
     if args.draft:
         draft_id = create_gmail_draft(html)

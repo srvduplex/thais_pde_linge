@@ -274,6 +274,18 @@ def test_apply_minimum_order_leaves_zero_quantities_at_zero():
     assert result["2941"] == 0  # pas de besoin -> pas de commande, meme sous le minimum
 
 
+def test_is_order_empty_true_when_all_quantities_are_zero():
+    assert lc.is_order_empty({"2941": 0, "1341": 0}) is True
+
+
+def test_is_order_empty_false_when_any_quantity_is_positive():
+    assert lc.is_order_empty({"2941": 0, "1341": 5}) is False
+
+
+def test_is_order_empty_true_for_empty_dict():
+    assert lc.is_order_empty({}) is True
+
+
 def test_build_recap_table_uses_designations_from_config():
     qty = {"2941": 5}
 
