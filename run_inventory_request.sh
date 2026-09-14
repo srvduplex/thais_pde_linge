@@ -17,7 +17,9 @@ CONFIG_PATH="${1:-configs/plat_detain_elis.json}"
 ENV_FILE="${2:-.env}"
 SLUG="$(basename "${CONFIG_PATH}" .json)"
 STATE_FILE="last_inventory_request_${SLUG}.txt"
+CURSOR_FILE="inventory_cursor_${SLUG}.txt"
 INTERVAL_DAYS="${INVENTORY_INTERVAL_DAYS:-21}"
+GROUP_SIZE="${INVENTORY_GROUP_SIZE:-4}"
 
 DELAY_SECONDS=$(( RANDOM % 10800 ))
 echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) : verification demande d'inventaire (intervalle ${INTERVAL_DAYS}j), delai aleatoire ${DELAY_SECONDS}s ==="
@@ -27,4 +29,4 @@ set -a
 source "${ENV_FILE}"
 set +a
 
-python3 inventory_request.py --config "${CONFIG_PATH}" --state-file "${STATE_FILE}" --interval-days "${INTERVAL_DAYS}"
+python3 inventory_request.py --config "${CONFIG_PATH}" --state-file "${STATE_FILE}" --interval-days "${INTERVAL_DAYS}" --cursor-file "${CURSOR_FILE}" --group-size "${GROUP_SIZE}"

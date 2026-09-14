@@ -274,14 +274,14 @@ def test_build_email_html_uses_footer_and_signature_from_config():
     assert "Mathieu Tarrade" in html
 
 
-def test_build_inventory_request_html_lists_bed_linen_references_only():
+def test_build_inventory_request_html_lists_bed_and_bath_linen_by_default():
     html = lc.build_inventory_request_html(CONFIG)
 
     assert "2941" in html
     assert "Drap Clas blc l. noir 280 NF" in html
     assert "280x285" in html
-    # linge de bain et restaurant exclus de la demande d'inventaire
-    assert "8786" not in html
+    assert "8786" in html  # linge de bain inclus
+    # restaurant exclu de la demande d'inventaire (workflow manuel distinct)
     assert "6735" not in html
 
 
@@ -289,3 +289,12 @@ def test_build_inventory_request_html_has_empty_quantity_cells_to_fill_in():
     html = lc.build_inventory_request_html(CONFIG)
 
     assert "<td></td>" in html
+
+
+def test_build_inventory_request_html_restricts_to_given_codes():
+    html = lc.build_inventory_request_html(CONFIG, codes=["2941", "8786"])
+
+    assert "2941" in html
+    assert "8786" in html
+    assert "1341" not in html  # pas dans le sous-ensemble demande
+    assert "8785" not in html

@@ -11,5 +11,6 @@ commande.html
 commande_*.html
 commande_*.json
 last_inventory_request_*.txt
+inventory_cursor_*.txt
 .env.*
 doc/

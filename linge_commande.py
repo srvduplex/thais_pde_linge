@@ -196,9 +196,11 @@ def build_recap_table(quantities: dict, config) -> str:
     return "\n".join(lines)
 
 
-def build_inventory_request_html(config, *, signature: str = None) -> str:
-    """Corps HTML de la demande d'inventaire (linge de lit uniquement),
-    a envoyer periodiquement pour ajuster la commande via apply_stock."""
+def build_inventory_request_html(config, *, codes: list = None, signature: str = None) -> str:
+    """Corps HTML de la demande d'inventaire (linge de lit + linge de bain,
+    hors restaurant qui suit un circuit manuel distinct), a envoyer
+    periodiquement pour ajuster la commande via apply_stock. `codes`
+    restreint la demande a un sous-ensemble (rotation, cf. inventory_request.py)."""
 
     signature = signature if signature is not None else config.signature
     html = [
@@ -211,7 +213,9 @@ def build_inventory_request_html(config, *, signature: str = None) -> str:
         "<tr><th>Code</th><th>Désignation</th><th>Dimension</th><th>Quantité en stock</th></tr>",
     ]
     for code, article in config.referentiel.items():
-        if article["section"] != "lit":
+        if article["section"] not in ("lit", "bain"):
+            continue
+        if codes is not None and code not in codes:
             continue
         html.append(f"<tr><td>{code}</td><td>{article['designation']}</td><td>{article['dimension']}</td><td></td></tr>")
     html.append("</table>")
