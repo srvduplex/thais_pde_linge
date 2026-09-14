@@ -10,5 +10,6 @@ cron.log
 commande.html
 commande_*.html
 commande_*.json
+last_inventory_request_*.txt
 .env.*
 doc/
