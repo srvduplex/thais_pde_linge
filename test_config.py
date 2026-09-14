@@ -36,6 +36,30 @@ def test_load_config_reads_json_into_a_config_object(tmp_path):
     assert hotel_config.signature == "Signature test"
     assert hotel_config.supplier_name == "Fournisseur Test"
     assert hotel_config.supplier_to_email == "contact@fournisseur-test.com"
+    assert hotel_config.minimum_order_qty == 0  # absent du JSON -> pas de minimum
+
+
+def test_load_config_reads_explicit_minimum_order_qty(tmp_path):
+    config_path = tmp_path / "hotel.json"
+    config_path.write_text(json.dumps({
+        "hotel_name": "Hotel Test",
+        "base_url": "https://test.thais-hotel.com",
+        "label_to_categorie": {},
+        "referentiel": {},
+        "dotation_lit": {},
+        "tapis_par_categorie": {},
+        "taies_fixes": {},
+        "bed_linen_codes_lit90": [],
+        "minimum_order_qty": 20,
+        "footer_note": "",
+        "signature": "",
+        "supplier_name": "",
+        "supplier_to_email": "x@example.com",
+    }))
+
+    hotel_config = cfg.load_config(str(config_path))
+
+    assert hotel_config.minimum_order_qty == 20
 
 
 def test_load_config_converts_bed_linen_codes_lit90_to_a_set(tmp_path):

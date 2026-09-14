@@ -257,6 +257,23 @@ def test_apply_stock_subtracts_and_floors_at_zero(tmp_path):
     assert result["517"] == 64  # pas de stock compte pour cette reference -> inchange
 
 
+def test_apply_minimum_order_bumps_up_references_below_the_minimum():
+    qty = {"2941": 6, "1341": 25}
+
+    result = lc.apply_minimum_order(qty, minimum=20)
+
+    assert result["2941"] == 20  # 6 -> plancher a 20
+    assert result["1341"] == 25  # deja au-dessus, inchange
+
+
+def test_apply_minimum_order_leaves_zero_quantities_at_zero():
+    qty = {"2941": 0}
+
+    result = lc.apply_minimum_order(qty, minimum=20)
+
+    assert result["2941"] == 0  # pas de besoin -> pas de commande, meme sous le minimum
+
+
 def test_build_recap_table_uses_designations_from_config():
     qty = {"2941": 5}
 

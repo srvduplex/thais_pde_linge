@@ -23,6 +23,7 @@ class HotelConfig:
     bed_linen_codes_lit90: set
     extra_bed_threshold: int | None
     extra_bed_dotation: dict
+    minimum_order_qty: int
     footer_note: str
     signature: str
     supplier_name: str
@@ -45,6 +46,7 @@ def load_config(path: str) -> HotelConfig:
         bed_linen_codes_lit90=set(data["bed_linen_codes_lit90"]),
         extra_bed_threshold=data.get("extra_bed_threshold"),
         extra_bed_dotation=data.get("extra_bed_dotation", {}),
+        minimum_order_qty=data.get("minimum_order_qty", 0),
         footer_note=data["footer_note"],
         signature=data["signature"],
         supplier_name=data["supplier_name"],

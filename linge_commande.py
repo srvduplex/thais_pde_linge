@@ -140,6 +140,13 @@ def apply_stock(quantities: dict, stock_path: str) -> dict:
     return result
 
 
+def apply_minimum_order(quantities: dict, minimum: int) -> dict:
+    """Remonte toute quantite strictement positive au minimum de commande du
+    fournisseur ; les references a 0 (aucun besoin) restent a 0."""
+
+    return {code: (max(qty, minimum) if qty > 0 else 0) for code, qty in quantities.items()}
+
+
 # ---------------------------------------------------------------------------
 # Recuperation des reservations depuis l'API Partner Thais
 # ---------------------------------------------------------------------------
@@ -392,6 +399,9 @@ def main(argv=None):
     )
     if args.stock:
         quantities = apply_stock(quantities, args.stock)
+
+    if hotel_config.minimum_order_qty:
+        quantities = apply_minimum_order(quantities, hotel_config.minimum_order_qty)
 
     if args.snapshot_json:
         with open(args.snapshot_json, "w", encoding="utf-8") as f:

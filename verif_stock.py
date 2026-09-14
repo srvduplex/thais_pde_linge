@@ -12,6 +12,7 @@ import json
 import os
 
 from linge_commande import (
+    apply_minimum_order,
     compute_needs_from_bookings,
     fetch_bookings,
     thais_login,
@@ -118,6 +119,8 @@ def main(argv=None):
         bookings = fetch_bookings(base_url, token, snapshot["from_date"], snapshot["to_date"])
 
     current_quantities = compute_needs_from_bookings(bookings, date_from, date_to, hotel_config)
+    if hotel_config.minimum_order_qty:
+        current_quantities = apply_minimum_order(current_quantities, hotel_config.minimum_order_qty)
     report = compute_delta_report(snapshot["quantities"], current_quantities, safety_stock_pct=args.safety_stock_pct)
 
     for code, entry in report.items():

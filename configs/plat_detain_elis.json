@@ -31,6 +31,7 @@
   "tapis_par_categorie": {"double": 1, "twin": 2, "triple": 2},
   "taies_fixes": {"43128": 2, "517": 2},
   "bed_linen_codes_lit90": ["1341", "41113"],
+  "minimum_order_qty": 20,
   "footer_note": "Compte HT2 n° 244968 — tournée 89 — livraison vendredi.",
   "signature": "Mathieu Tarrade<br>HT2 SARL — Le Plat d'Étain<br>06 02 05 24 99",
   "supplier_name": "Elis",
