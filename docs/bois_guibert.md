@@ -55,46 +55,51 @@ normalement via `label_to_categorie`, sans besoin d'override
 pour les chambres 5,6,11,12,14,15,3,10 (mélange 140/160 au sein d'une même
 catégorie Thaïs) ; les autres catégories peuvent rester sur `label_to_categorie`.
 
-## Référentiel Anett (extrait de 2 factures réelles, `doc/*.pdf`)
+## Référentiel Anett
 
-Codes identiques sur les deux factures (24/11/24-28/12/24 et 29/12/24-25/01/25),
-seules les quantités changent — confiance élevée sur ces codes/désignations.
+Deux sources croisées : 2 factures réelles (`doc/*.pdf`, 24/11/24-28/12/24 et
+29/12/24-25/01/25, codes identiques sur les deux) + la liste compilée par
+Gwennaëlle le 14/09/2026 (`doc/Liste_references_articles_Anett.docx`, à partir
+des bons de livraison et de la facture de juillet).
 
-| Code | Désignation | Dimension | Liseret |
+| Code | Désignation (Gwennaëlle) | Dimension | Liseret |
 |---|---|---|---|
-| 0040BF | Drap blanc 180×320 Open End | 180×320 | — |
-| 0050BE | Drap blanc 240×320 | 240×320 | — |
-| 0300BE | Drap de bain blanc 70×140 | 70×140 | — |
-| 0310BE | Tapis de bain blanc 50×75 | 50×75 | — |
-| 0320BE | Serviette éponge 50×90 grec | 50×90 | — |
-| 0510BV | Taie blanche 68×68 | 68×68 | — |
-| 1532AN | Housse couette 160×260 | 160×260 | Orange |
-| 1533AN1 | Housse couette 265×280 | 265×280 | Noir |
-| 0130BF | Nappe Luna 160×160 (restaurant) | 160×160 | — |
+| 0040BF | Drap blanc Open End | 180×320 | — |
+| 0050BE | Drap blanc | 240×320 | — |
+| 0300BE | Drap de bain grec blanc | 70×140 | — |
+| 0310BE | **"Serviette de toilette" (Gwennaëlle) vs "TAPIS DE BAIN" (facture)** ⚠️ | 50×75 | — |
+| 0320BE | Serviette grec blanc | 50×90 | — |
+| 0510BV | Taie blanche (carrée) | 68×68 | — |
+| 0511BS | Taie sac américaine blanche (rectangulaire) | 55×90 | — |
+| 1532AN | Housse de couette Simply blanc | 160×260 | Orange |
+| 1533AN1 | Housse de couette Simply blanc | 265×280 | Noir |
+| 0130BF | Nappe Luna blanc (restaurant) | 160×160 | — |
 
-(Exclus : sacs polyester logistique, chariot porte-sacs, frais administratifs
-PPE/PCE/contribution énergie/abonnement — pas du linge.)
+(Exclus : sacs polyester logistique 2100GA/JA/OA, DA005A (housse cabriolet
+fauteuil), 1320C3 (porte-sacs, référence contestée par Gwennaëlle, absente
+des bons de juillet), frais administratifs PPE/PCE/contribution
+énergie/abonnement/TBV — pas du linge.)
+
+**0511BS (taie rectangulaire) trouvée le 14/09** — absente des 2 factures
+consultées mais présente dans la liste de Gwennaëlle. Résout le point ouvert
+sur la 2e taie : 4 oreillers = 2× 0510BV (carrée) + 2× 0511BS (rectangulaire),
+cohérent avec le Plat d'Étain.
 
 ## Points ouverts (à ne pas deviner)
 
-**En attente de réponse de Gwennaëlle (gwennaelle@bois-guibert.com)** — email
-envoyé le 13/09/2026 (thread Gmail `1a09c3226f649427`) avec le tableau
-drap/housse par config de lit + la question sur les taies. Ne pas relancer
-la question tant qu'on n'a pas sa réponse ou qu'on ne l'a pas relancée
-explicitement.
-
-1. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
+1. **⚠️ Conflit 0310BE** : la facture dit "TAPIS DE BAIN BLANC 50×75", la liste
+   de Gwennaëlle dit "Serviette de toilette grec blanc 50×75" — deux objets
+   différents (tapis de sol vs petite serviette), et aucune autre référence de
+   la liste ne ressemble à un tapis de bain. Question renvoyée à Mathieu/Gwennaëlle
+   le 14/09, réponse attendue avant de coder ce code dans la config.
+2. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
    par Mathieu avec les codes exacts) —
-   - drap 0040BF (180×320) + housse 1532AN (160×260) = jeu "double" (140 et/ou 160 ?)
+   - drap 0040BF (180×320) + housse 1532AN (160×260, orange) = jeu "double" (140 et/ou 160 ?)
    - drap 0050BE (240×320) + housse 1533AN1 (265×280, noir) = jeu "combo" pour
      le lit combiné des Triple (160+90 ensemble), par analogie avec le
      "265 bleu marine" d'Elis au Plat d'Étain
    - Reste à savoir comment les chambres Twin (2 lits 90 séparés) sont couvertes
      (même jeu que le double, par lit ? autre chose ?)
-2. **Une seule taille de taie (68×68 carrée)** apparaît sur les factures — pas
-   de taie rectangulaire comme chez Elis. Mathieu avait dit "4 oreillers
-   (carré+rectangle) comme au PDE" : la taie rectangulaire vient-elle d'ailleurs
-   (pas Anett), ou est-ce en fait 4× la même taie carrée ici ?
 3. **Lit d'appoint (>3 occupants → 90×190)** : le moteur supporte déjà
    `extra_bed_threshold`/`extra_bed_dotation` (voir `config.py`), mais les codes
    Anett exacts pour ce lit d'appoint restent à préciser.
