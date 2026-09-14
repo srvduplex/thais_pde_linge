@@ -196,6 +196,31 @@ def build_recap_table(quantities: dict, config) -> str:
     return "\n".join(lines)
 
 
+def build_inventory_request_html(config, *, signature: str = None) -> str:
+    """Corps HTML de la demande d'inventaire (linge de lit uniquement),
+    a envoyer periodiquement pour ajuster la commande via apply_stock."""
+
+    signature = signature if signature is not None else config.signature
+    html = [
+        "<div>",
+        "<p>Bonjour,</p>",
+        "<p>Pour ajuster la commande de linge de la semaine avant la livraison de vendredi, "
+        "merci de compter le stock actuel (linge propre, prêt à l'emploi) pour chacune des "
+        "références ci-dessous, et de <strong>répondre à cet email</strong> avec les quantités.</p>",
+        '<table border="1" cellspacing="0" cellpadding="6">',
+        "<tr><th>Code</th><th>Désignation</th><th>Dimension</th><th>Quantité en stock</th></tr>",
+    ]
+    for code, article in config.referentiel.items():
+        if article["section"] != "lit":
+            continue
+        html.append(f"<tr><td>{code}</td><td>{article['designation']}</td><td>{article['dimension']}</td><td></td></tr>")
+    html.append("</table>")
+    html.append("<p>Merci d'avance,<br>")
+    html.append(f"{signature}</p>")
+    html.append("</div>")
+    return "\n".join(html)
+
+
 def build_email_html(
     quantities: dict,
     config,
