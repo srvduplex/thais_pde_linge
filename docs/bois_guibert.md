@@ -67,7 +67,7 @@ des bons de livraison et de la facture de juillet).
 | 0040BF | Drap blanc Open End | 180×320 | — |
 | 0050BE | Drap blanc | 240×320 | — |
 | 0300BE | Drap de bain grec blanc | 70×140 | — |
-| 0310BE | **"Serviette de toilette" (Gwennaëlle) vs "TAPIS DE BAIN" (facture)** ⚠️ | 50×75 | — |
+| 0310BE | Tapis de bain blanc | 50×75 | — |
 | 0320BE | Serviette grec blanc | 50×90 | — |
 | 0510BV | Taie blanche (carrée) | 68×68 | — |
 | 0511BS | Taie sac américaine blanche (rectangulaire) | 55×90 | — |
@@ -87,12 +87,7 @@ cohérent avec le Plat d'Étain.
 
 ## Points ouverts (à ne pas deviner)
 
-1. **⚠️ Conflit 0310BE** : la facture dit "TAPIS DE BAIN BLANC 50×75", la liste
-   de Gwennaëlle dit "Serviette de toilette grec blanc 50×75" — deux objets
-   différents (tapis de sol vs petite serviette), et aucune autre référence de
-   la liste ne ressemble à un tapis de bain. Question renvoyée à Mathieu/Gwennaëlle
-   le 14/09, réponse attendue avant de coder ce code dans la config.
-2. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
+1. **Mapping drap/housse ↔ taille de lit** : hypothèse de travail (à confirmer
    par Mathieu avec les codes exacts) —
    - drap 0040BF (180×320) + housse 1532AN (160×260, orange) = jeu "double" (140 et/ou 160 ?)
    - drap 0050BE (240×320) + housse 1533AN1 (265×280, noir) = jeu "combo" pour
@@ -100,7 +95,7 @@ cohérent avec le Plat d'Étain.
      "265 bleu marine" d'Elis au Plat d'Étain
    - Reste à savoir comment les chambres Twin (2 lits 90 séparés) sont couvertes
      (même jeu que le double, par lit ? autre chose ?)
-3. **Lit d'appoint (>3 occupants → 90×190)** : le moteur supporte déjà
+2. **Lit d'appoint (>3 occupants → 90×190)** : le moteur supporte déjà
    `extra_bed_threshold`/`extra_bed_dotation` (voir `config.py`), mais les codes
    Anett exacts pour ce lit d'appoint restent à préciser.
 
