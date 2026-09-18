@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import csv
 import datetime
+import json
 import os
 
 
@@ -56,6 +57,22 @@ def merge_stock(stock_path: str, quantities: dict) -> dict:
     current.update(quantities)
     write_stock(stock_path, current)
     return current
+
+
+def load_carryover(carryover_path: str) -> dict:
+    """Dernier ecart connu (current - commande) par reference, calcule par la
+    verification nocturne. Positif = manque a ajouter, negatif = surplus a
+    deduire, pour ramener le stock au meme niveau cible chaque semaine."""
+
+    if not os.path.exists(carryover_path):
+        return {}
+    with open(carryover_path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_carryover(carryover_path: str, deltas: dict) -> None:
+    with open(carryover_path, "w", encoding="utf-8") as f:
+        json.dump(deltas, f, indent=2, ensure_ascii=False)
 
 
 def record_inventory_reply(

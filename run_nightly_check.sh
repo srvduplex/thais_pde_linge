@@ -13,6 +13,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 CONFIG_PATH="${1:-configs/plat_detain_elis.json}"
 ENV_FILE="${2:-.env}"
 SLUG="$(basename "${CONFIG_PATH}" .json)"
+CARRYOVER_FILE="carryover_${SLUG}.json"
 
 set -a
 source "${ENV_FILE}"
@@ -34,4 +35,4 @@ if [[ ! -f "${SNAPSHOT}" ]]; then
   exit 0
 fi
 
-python3 verif_stock.py --config "${CONFIG_PATH}" --snapshot-json "${SNAPSHOT}" --notify-smtp
+python3 verif_stock.py --config "${CONFIG_PATH}" --snapshot-json "${SNAPSHOT}" --carryover-file "${CARRYOVER_FILE}" --notify-smtp

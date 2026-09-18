@@ -51,6 +51,29 @@ def test_merge_stock_updates_only_counted_references_and_keeps_the_rest(tmp_path
     assert sh.read_stock(str(stock_path)) == merged
 
 
+def test_load_carryover_returns_empty_dict_when_no_file(tmp_path):
+    carryover_path = tmp_path / "carryover.json"
+
+    assert sh.load_carryover(str(carryover_path)) == {}
+
+
+def test_save_then_load_carryover_roundtrip(tmp_path):
+    carryover_path = tmp_path / "carryover.json"
+
+    sh.save_carryover(str(carryover_path), {"2941": 9, "1341": -3})
+
+    assert sh.load_carryover(str(carryover_path)) == {"2941": 9, "1341": -3}
+
+
+def test_save_carryover_overwrites_previous_value(tmp_path):
+    carryover_path = tmp_path / "carryover.json"
+    sh.save_carryover(str(carryover_path), {"2941": 9})
+
+    sh.save_carryover(str(carryover_path), {"2941": 4, "1341": 2})
+
+    assert sh.load_carryover(str(carryover_path)) == {"2941": 4, "1341": 2}
+
+
 def test_record_inventory_reply_appends_history_and_merges_stock(tmp_path):
     history_path = tmp_path / "history.csv"
     stock_path = tmp_path / "stock.csv"

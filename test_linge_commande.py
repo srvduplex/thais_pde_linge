@@ -257,6 +257,24 @@ def test_apply_stock_subtracts_and_floors_at_zero(tmp_path):
     assert result["517"] == 64  # pas de stock compte pour cette reference -> inchange
 
 
+def test_apply_carryover_adds_positive_deltas_to_the_new_need():
+    qty = {"2941": 15, "1341": 6}
+
+    result = lc.apply_carryover(qty, {"2941": 9})
+
+    assert result["2941"] == 24  # 15 + 9 de manque non couvert la semaine passee
+    assert result["1341"] == 6  # pas d'ecart connu -> inchange
+
+
+def test_apply_carryover_subtracts_negative_deltas_but_floors_at_zero():
+    qty = {"2941": 15, "1341": 6}
+
+    result = lc.apply_carryover(qty, {"2941": -20, "1341": -2})
+
+    assert result["2941"] == 0  # surplus de 20 la semaine passee > besoin -> plafonne a 0
+    assert result["1341"] == 4  # 6 - 2
+
+
 def test_apply_minimum_order_bumps_up_references_below_the_minimum():
     qty = {"2941": 6, "1341": 25}
 

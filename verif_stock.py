@@ -93,6 +93,7 @@ def main(argv=None):
     parser.add_argument("--username", help="Identifiant API Thais (sinon variable THAIS_USERNAME)")
     parser.add_argument("--password", help="Mot de passe API Thais (sinon variable THAIS_PASSWORD)")
     parser.add_argument("--safety-stock-pct", type=float, default=0.20)
+    parser.add_argument("--carryover-file", metavar="FICHIER", help="Sauvegarde l'ecart du soir (current - commande) pour que la prochaine commande du lundi l'absorbe")
     parser.add_argument("--notify-smtp", action="store_true")
     args = parser.parse_args(argv)
 
@@ -122,6 +123,11 @@ def main(argv=None):
     if hotel_config.minimum_order_qty:
         current_quantities = apply_minimum_order(current_quantities, hotel_config.minimum_order_qty)
     report = compute_delta_report(snapshot["quantities"], current_quantities, safety_stock_pct=args.safety_stock_pct)
+
+    if args.carryover_file:
+        import stock_history as sh
+
+        sh.save_carryover(args.carryover_file, {code: entry["delta"] for code, entry in report.items()})
 
     for code, entry in report.items():
         flag = " /!\\ A RISQUE" if entry["at_risk"] else ""

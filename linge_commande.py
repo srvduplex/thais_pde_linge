@@ -147,6 +147,19 @@ def is_order_empty(quantities: dict) -> bool:
     return all(qty <= 0 for qty in quantities.values())
 
 
+def apply_carryover(quantities: dict, carryover: dict) -> dict:
+    """Ajoute l'ecart non couvert de la semaine precedente (positif = manque,
+    negatif = surplus) pour que le stock revienne au meme niveau cible
+    chaque semaine. Plafonne a 0 (un surplus ne peut pas rendre une
+    quantite negative)."""
+
+    result = dict(quantities)
+    for code, delta in carryover.items():
+        if code in result:
+            result[code] = max(0, result[code] + delta)
+    return result
+
+
 def apply_minimum_order(quantities: dict, minimum: int) -> dict:
     """Remonte toute quantite strictement positive au minimum de commande du
     fournisseur ; les references a 0 (aucun besoin) restent a 0."""
@@ -372,6 +385,7 @@ def main(argv=None):
     parser.add_argument("--notify-smtp", action="store_true", help="Envoie un email recap a soi-meme par SMTP (SMTP_USERNAME/SMTP_APP_PASSWORD/SMTP_FROM/SMTP_TO)")
     parser.add_argument("--out-html", metavar="FICHIER", help="Sauvegarde le corps HTML dans un fichier")
     parser.add_argument("--snapshot-json", metavar="FICHIER", help="Sauvegarde les quantites commandees (hors restaurant) pour la verification nocturne")
+    parser.add_argument("--carryover-file", metavar="FICHIER", help="Ajoute l'ecart non couvert de la semaine precedente (calcule par verif_stock.py) et le remet a zero une fois absorbe")
     args = parser.parse_args(argv)
 
     import config as cfg
@@ -404,6 +418,12 @@ def main(argv=None):
         sans_tapis=args.sans_tapis,
         triple_sans_90=args.triple_sans_90,
     )
+    if args.carryover_file:
+        import stock_history as sh
+
+        carryover = sh.load_carryover(args.carryover_file)
+        quantities = apply_carryover(quantities, carryover)
+
     if args.stock:
         quantities = apply_stock(quantities, args.stock)
 
@@ -418,6 +438,10 @@ def main(argv=None):
                 indent=2,
                 ensure_ascii=False,
             )
+        if args.carryover_file:
+            import stock_history as sh
+
+            sh.save_carryover(args.carryover_file, {})  # ecart absorbe dans cette commande
 
     quantities["6735"] = args.nappe_12x12
     quantities["6739"] = args.nappe_15x15

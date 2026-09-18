@@ -11,6 +11,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 CONFIG_PATH="${1:-configs/plat_detain_elis.json}"
 ENV_FILE="${2:-.env}"
 SLUG="$(basename "${CONFIG_PATH}" .json)"
+CARRYOVER_FILE="carryover_${SLUG}.json"
 
 set -a
 source "${ENV_FILE}"
@@ -32,4 +33,5 @@ python3 linge_commande.py \
   --to-date "${DATE_TO}" \
   --notify-smtp \
   --out-html "commande_${SLUG}_${DATE_FROM}.html" \
-  --snapshot-json "commande_${SLUG}_${DATE_FROM}.json"
+  --snapshot-json "commande_${SLUG}_${DATE_FROM}.json" \
+  --carryover-file "${CARRYOVER_FILE}"
