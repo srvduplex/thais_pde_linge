@@ -111,10 +111,10 @@ def compute_needs_from_bookings(
                 if not sans_bain:
                     # drap de bain = grande serviette : meme cycle 2 jours que
                     # la serviette eponge et le tapis (full + partiel).
-                    qty["8786"] += occupants
-                    qty["8785"] += occupants
+                    qty[config.drap_bain_code] += occupants
+                    qty[config.serviette_code] += occupants
                     if not sans_tapis:
-                        qty["8787"] += config.tapis_par_categorie[categorie]
+                        qty[config.tapis_bain_code] += config.tapis_par_categorie[categorie]
 
     return qty
 

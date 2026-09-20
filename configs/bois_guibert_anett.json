@@ -1,0 +1,40 @@
+{
+  "hotel_name": "Hôtel du Château Bois-Guibert",
+  "base_url": "https://boisguibert.thais-hotel.com",
+  "label_to_categorie": {
+    "Chambre Twin Supérieure - Château": "twin",
+    "Chambre Twin Deluxe - Douves": "twin",
+    "Chambre Double Supérieure - Château": "double",
+    "Chambre Double Standard - Château": "double",
+    "Chambre Double Deluxe - Douves": "double",
+    "Chambre Triple Supérieure - Château": "triple"
+  },
+  "referentiel": {
+    "0040BF": {"designation": "Drap blanc Open End", "dimension": "180x320", "liseret": "-", "section": "lit"},
+    "0050BE": {"designation": "Drap blanc", "dimension": "240x320", "liseret": "-", "section": "lit"},
+    "0510BV": {"designation": "Taie blanche (carrée)", "dimension": "68x68", "liseret": "-", "section": "lit"},
+    "0511BS": {"designation": "Taie sac américaine blanche", "dimension": "55x90", "liseret": "-", "section": "lit"},
+    "1532AN": {"designation": "Housse de couette Simply blanc", "dimension": "160x260", "liseret": "Orange", "section": "lit"},
+    "1533AN1": {"designation": "Housse de couette Simply blanc", "dimension": "265x280", "liseret": "Noir", "section": "lit"},
+    "0300BE": {"designation": "Drap de bain grec blanc", "dimension": "70x140", "liseret": "-", "section": "bain"},
+    "0320BE": {"designation": "Serviette grec blanc", "dimension": "50x90", "liseret": "-", "section": "bain"},
+    "0310BE": {"designation": "Tapis de bain blanc", "dimension": "50x75", "liseret": "-", "section": "bain"},
+    "0130BF": {"designation": "Nappe Luna blanc", "dimension": "160x160", "liseret": "-", "section": "restaurant"}
+  },
+  "dotation_lit": {
+    "double": {"0040BF": 1, "1533AN1": 1},
+    "twin": {"0040BF": 2, "1532AN": 2},
+    "triple": {"0050BE": 1, "1533AN1": 1, "1532AN": 1}
+  },
+  "tapis_par_categorie": {"double": 1, "twin": 2, "triple": 2},
+  "taies_fixes": {"0510BV": 2, "0511BS": 2},
+  "drap_bain_code": "0300BE",
+  "serviette_code": "0320BE",
+  "tapis_bain_code": "0310BE",
+  "bed_linen_codes_lit90": ["1532AN"],
+  "minimum_order_qty": 0,
+  "footer_note": "Hôtel du Château Bois-Guibert — compte Anett S379900.",
+  "signature": "Mathieu Tarrade<br>HI-TAG — Hôtel du Château Bois-Guibert",
+  "supplier_name": "Anett",
+  "supplier_to_email": "contact@bois-guibert.com"
+}

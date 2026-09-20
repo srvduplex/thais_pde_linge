@@ -93,6 +93,27 @@ def test_nights_outside_the_reporting_window_are_ignored():
     assert qty["8787"] == 1  # tapis (categorie double)
 
 
+def test_bath_linen_codes_are_configurable_not_hardcoded_to_elis():
+    # Config avec des codes de linge de bain differents d'Elis (ex. Anett).
+    custom_config = cfg.HotelConfig(**{**CONFIG.__dict__, "drap_bain_code": "0300BE", "serviette_code": "0320BE", "tapis_bain_code": "0310BE"})
+    custom_config.referentiel = {
+        **{k: v for k, v in CONFIG.referentiel.items() if v["section"] != "bain"},
+        "0300BE": {"designation": "Drap de bain", "dimension": "-", "liseret": "-", "section": "bain"},
+        "0320BE": {"designation": "Serviette", "dimension": "-", "liseret": "-", "section": "bain"},
+        "0310BE": {"designation": "Tapis de bain", "dimension": "-", "liseret": "-", "section": "bain"},
+    }
+    bookings = [_booking("2026-09-13", "2026-09-14", "Chambre Double Supérieur", adults=2)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), custom_config
+    )
+
+    assert qty["0300BE"] == 2
+    assert qty["0320BE"] == 2
+    assert qty["0310BE"] == 1
+    assert "8786" not in qty
+
+
 def test_unmapped_room_category_is_skipped_without_crashing():
     bookings = [_booking("2026-09-13", "2026-09-14", "Categorie inconnue", adults=2)]
 

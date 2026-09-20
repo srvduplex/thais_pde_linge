@@ -20,6 +20,9 @@ class HotelConfig:
     dotation_lit: dict
     tapis_par_categorie: dict
     taies_fixes: dict
+    drap_bain_code: str
+    serviette_code: str
+    tapis_bain_code: str
     bed_linen_codes_lit90: set
     extra_bed_threshold: int | None
     extra_bed_dotation: dict
@@ -43,6 +46,9 @@ def load_config(path: str) -> HotelConfig:
         dotation_lit=data["dotation_lit"],
         tapis_par_categorie=data["tapis_par_categorie"],
         taies_fixes=data["taies_fixes"],
+        drap_bain_code=data["drap_bain_code"],
+        serviette_code=data["serviette_code"],
+        tapis_bain_code=data["tapis_bain_code"],
         bed_linen_codes_lit90=set(data["bed_linen_codes_lit90"]),
         extra_bed_threshold=data.get("extra_bed_threshold"),
         extra_bed_dotation=data.get("extra_bed_dotation", {}),
