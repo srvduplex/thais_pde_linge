@@ -23,6 +23,10 @@ class HotelConfig:
     drap_bain_code: str
     serviette_code: str
     tapis_bain_code: str
+    delivery_weekday: int
+    category_labels: dict
+    email_intro: str
+    email_closing: str
     bed_linen_codes_lit90: set
     extra_bed_threshold: int | None
     extra_bed_dotation: dict
@@ -49,6 +53,10 @@ def load_config(path: str) -> HotelConfig:
         drap_bain_code=data["drap_bain_code"],
         serviette_code=data["serviette_code"],
         tapis_bain_code=data["tapis_bain_code"],
+        delivery_weekday=data["delivery_weekday"],
+        category_labels=data.get("category_labels", {}),
+        email_intro=data.get("email_intro", ""),
+        email_closing=data.get("email_closing", ""),
         bed_linen_codes_lit90=set(data["bed_linen_codes_lit90"]),
         extra_bed_threshold=data.get("extra_bed_threshold"),
         extra_bed_dotation=data.get("extra_bed_dotation", {}),

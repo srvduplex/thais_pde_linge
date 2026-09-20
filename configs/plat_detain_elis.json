@@ -33,6 +33,14 @@
   "drap_bain_code": "8786",
   "serviette_code": "8785",
   "tapis_bain_code": "8787",
+  "delivery_weekday": 4,
+  "category_labels": {
+    "double": "Chambres Double (lit 140)",
+    "twin": "Chambres Twin",
+    "triple": "Chambres Triple (160 + 90)"
+  },
+  "email_intro": "Bonjour Pauline, bonjour Coralie,<br><br>Voici notre commande de linge pour la livraison de cette semaine, calculée sur le prévisionnel d'occupation :",
+  "email_closing": "Pouvez-vous me confirmer la prise en compte ? Merci pour votre réactivité.",
   "bed_linen_codes_lit90": ["1341", "41113"],
   "minimum_order_qty": 20,
   "footer_note": "Compte HT2 n° 244968 — tournée 89 — livraison vendredi.",

@@ -18,6 +18,7 @@ def test_load_config_reads_json_into_a_config_object(tmp_path):
         "drap_bain_code": "9999",
         "serviette_code": "9998",
         "tapis_bain_code": "9997",
+        "delivery_weekday": 4,
         "bed_linen_codes_lit90": [],
         "footer_note": "Compte test",
         "signature": "Signature test",
@@ -40,6 +41,7 @@ def test_load_config_reads_json_into_a_config_object(tmp_path):
     assert hotel_config.supplier_name == "Fournisseur Test"
     assert hotel_config.supplier_to_email == "contact@fournisseur-test.com"
     assert hotel_config.minimum_order_qty == 0  # absent du JSON -> pas de minimum
+    assert hotel_config.delivery_weekday == 4  # vendredi
 
 
 def test_load_config_reads_explicit_minimum_order_qty(tmp_path):
@@ -55,6 +57,7 @@ def test_load_config_reads_explicit_minimum_order_qty(tmp_path):
         "drap_bain_code": "9999",
         "serviette_code": "9998",
         "tapis_bain_code": "9997",
+        "delivery_weekday": 4,
         "bed_linen_codes_lit90": [],
         "minimum_order_qty": 20,
         "footer_note": "",
@@ -81,6 +84,7 @@ def test_load_config_converts_bed_linen_codes_lit90_to_a_set(tmp_path):
         "drap_bain_code": "9999",
         "serviette_code": "9998",
         "tapis_bain_code": "9997",
+        "delivery_weekday": 4,
         "bed_linen_codes_lit90": ["1341", "41113"],
         "footer_note": "",
         "signature": "",
@@ -107,6 +111,7 @@ def test_load_config_reads_explicit_room_label_to_categorie_override(tmp_path):
         "drap_bain_code": "9999",
         "serviette_code": "9998",
         "tapis_bain_code": "9997",
+        "delivery_weekday": 4,
         "bed_linen_codes_lit90": [],
         "footer_note": "",
         "signature": "",

@@ -19,16 +19,18 @@ set -a
 source "${ENV_FILE}"
 set +a
 
-ACTIVE_FRIDAY="$(python3 -c "
+ACTIVE_DELIVERY_DAY="$(python3 -c "
 import datetime
+import config as cfg
+hc = cfg.load_config('${CONFIG_PATH}')
 today = datetime.date.today()
-days_since_friday = (today.weekday() - 4) % 7
-print((today - datetime.timedelta(days=days_since_friday)).isoformat())
+days_since = (today.weekday() - hc.delivery_weekday) % 7
+print((today - datetime.timedelta(days=days_since)).isoformat())
 ")"
 
-SNAPSHOT="commande_${SLUG}_${ACTIVE_FRIDAY}.json"
+SNAPSHOT="commande_${SLUG}_${ACTIVE_DELIVERY_DAY}.json"
 
-echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) : [${SLUG}] verification stock, fenetre debutant ${ACTIVE_FRIDAY} ==="
+echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) : [${SLUG}] verification stock, fenetre debutant ${ACTIVE_DELIVERY_DAY} ==="
 
 if [[ ! -f "${SNAPSHOT}" ]]; then
   echo "Snapshot ${SNAPSHOT} introuvable (pas de commande enregistree pour cette fenetre) — verification ignoree."

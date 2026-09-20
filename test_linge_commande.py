@@ -325,6 +325,45 @@ def test_is_order_empty_true_for_empty_dict():
     assert lc.is_order_empty({}) is True
 
 
+def test_compute_category_nights_counts_full_change_nights_per_categorie():
+    bookings = [
+        _booking("2026-09-13", "2026-09-14", "Chambre Double Supérieur", adults=2),
+        _booking("2026-09-13", "2026-09-14", "Chambre Double Classique", adults=2),
+        _booking("2026-09-13", "2026-09-14", "Chambre Triple", adults=3),
+    ]
+
+    nights = lc.compute_category_nights(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), CONFIG
+    )
+
+    assert nights["double"] == 2  # Double Superieur + Double Classique regroupes
+    assert nights["triple"] == 1
+    assert nights.get("twin", 0) == 0
+
+
+def test_build_email_html_includes_category_summary_when_provided():
+    qty = {"2941": 40, "11143": 20}
+
+    html = lc.build_email_html(
+        qty, CONFIG,
+        category_nights={"double": 40, "triple": 20},
+        category_labels={"double": "Chambres Double (lit 140)", "triple": "Chambres Triple"},
+    )
+
+    assert "Chambres Double (lit 140)" in html
+    assert "40 nuits" in html
+    assert "Chambres Triple" in html
+    assert "20 nuits" in html
+
+
+def test_build_email_html_omits_category_summary_when_not_provided():
+    qty = {"2941": 40}
+
+    html = lc.build_email_html(qty, CONFIG)
+
+    assert "nuits" not in html
+
+
 def test_build_recap_table_uses_designations_from_config():
     qty = {"2941": 5}
 

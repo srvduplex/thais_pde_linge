@@ -119,6 +119,39 @@ def compute_needs_from_bookings(
     return qty
 
 
+def compute_category_nights(bookings: list, date_from: datetime.date, date_to: datetime.date, config) -> dict:
+    """Nombre de nuitees a changement complet par categorie de literie, pour
+    le resume ('Chambres Double : 40 nuits') mis en tete de l'email fournisseur."""
+
+    nights = {}
+    window_end_exclusive = date_to + datetime.timedelta(days=1)
+
+    for booking in bookings:
+        if booking.get("canceled") or booking.get("no_show"):
+            continue
+
+        start = datetime.date.fromisoformat(booking["start_at"])
+        end = datetime.date.fromisoformat(booking["end_at"])
+
+        for booking_room in booking.get("booking_rooms", []):
+            room = booking_room.get("room") or {}
+            room_type = room.get("room_type") or {}
+            categorie = config.room_label_to_categorie.get(room.get("label"))
+            if categorie is None:
+                categorie = config.label_to_categorie.get(room_type.get("label"))
+            if categorie is None:
+                continue
+
+            for night in _daterange(start, end):
+                if night < date_from or night >= window_end_exclusive:
+                    continue
+                day_of_stay = (night - start).days + 1
+                if stay_night_kind(day_of_stay) == "full":
+                    nights[categorie] = nights.get(categorie, 0) + 1
+
+    return nights
+
+
 def apply_stock(quantities: dict, stock_path: str) -> dict:
     """Soustrait un stock compte par reference (qte finale = max(0, besoin - stock))."""
 
@@ -258,23 +291,42 @@ def build_email_html(
     *,
     footer_note: str = None,
     signature: str = None,
+    intro: str = None,
+    category_nights: dict = None,
+    category_labels: dict = None,
+    closing_note: str = None,
 ) -> str:
+    """Genere le corps HTML de l'email de commande. `category_nights` +
+    `category_labels` (optionnels) ajoutent le resume en puces ("Chambres
+    Double (lit 140) : 40 nuits") utilise historiquement par Mathieu avant le
+    tableau detaille, cf. echanges reels avec Elis."""
+
     footer_note = footer_note if footer_note is not None else config.footer_note
     signature = signature if signature is not None else config.signature
     sections = _rows_by_section(quantities, config)
     html = ["<div>"]
+    if intro:
+        html.append(f"<p>{intro}</p>")
+    if category_nights and category_labels:
+        html.append("<ul>")
+        for categorie, label in category_labels.items():
+            n = category_nights.get(categorie, 0)
+            if n > 0:
+                html.append(f"<li>{label} : <strong>{n} nuits</strong></li>")
+        html.append("</ul>")
     for section in ("lit", "bain", "restaurant"):
         rows = sections[section]
         if not rows:
             continue
         html.append(f"<h3>{SECTION_TITLES[section]}</h3>")
         html.append('<table border="1" cellspacing="0" cellpadding="4">')
-        html.append("<tr><th>Code</th><th>Désignation</th><th>Détail</th><th>Quantité</th></tr>")
+        html.append("<tr><th>Code</th><th>Description</th><th>Dimension</th><th>Quantité</th></tr>")
         for code, article, qte in rows:
-            detail = article["liseret"] if article["liseret"] != "-" else article["dimension"]
-            html.append(f"<tr><td>{code}</td><td>{article['designation']}</td><td>{detail}</td><td>{qte}</td></tr>")
+            html.append(f"<tr><td>{code}</td><td>{article['designation']}</td><td>{article['dimension']}</td><td>{qte}</td></tr>")
         html.append("</table>")
     html.append(f"<p>{footer_note}</p>")
+    if closing_note:
+        html.append(f"<p>{closing_note}</p>")
     html.append(f"<p>{signature}</p>")
     html.append("</div>")
     return "\n".join(html)
@@ -450,7 +502,18 @@ def main(argv=None):
     print(build_recap_table(quantities, hotel_config))
     print()
 
-    html = build_email_html(quantities, hotel_config)
+    category_nights = None
+    if hotel_config.category_labels:
+        category_nights = compute_category_nights(bookings, date_from, date_to, hotel_config)
+
+    html = build_email_html(
+        quantities,
+        hotel_config,
+        intro=hotel_config.email_intro or None,
+        category_nights=category_nights,
+        category_labels=hotel_config.category_labels or None,
+        closing_note=hotel_config.email_closing or None,
+    )
     print(html)
 
     if args.out_html:
