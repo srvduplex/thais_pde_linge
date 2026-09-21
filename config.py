@@ -24,6 +24,7 @@ class HotelConfig:
     serviette_code: str
     tapis_bain_code: str
     delivery_weekday: int
+    hotel_code: str
     category_labels: dict
     email_intro: str
     email_closing: str
@@ -54,6 +55,7 @@ def load_config(path: str) -> HotelConfig:
         serviette_code=data["serviette_code"],
         tapis_bain_code=data["tapis_bain_code"],
         delivery_weekday=data["delivery_weekday"],
+        hotel_code=data["hotel_code"],
         category_labels=data.get("category_labels", {}),
         email_intro=data.get("email_intro", ""),
         email_closing=data.get("email_closing", ""),

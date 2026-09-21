@@ -438,6 +438,8 @@ def main(argv=None):
     parser.add_argument("--out-html", metavar="FICHIER", help="Sauvegarde le corps HTML dans un fichier")
     parser.add_argument("--snapshot-json", metavar="FICHIER", help="Sauvegarde les quantites commandees (hors restaurant) pour la verification nocturne")
     parser.add_argument("--carryover-file", metavar="FICHIER", help="Ajoute l'ecart non couvert de la semaine precedente (calcule par verif_stock.py) et le remet a zero une fois absorbe")
+    parser.add_argument("--order-log", metavar="FICHIER", help="Log des commandes envoyees (garde-fou anti-doublon + historique pour controle de facturation)")
+    parser.add_argument("--force-resend", action="store_true", help="Ignore le garde-fou anti-doublon et envoie quand meme")
     args = parser.parse_args(argv)
 
     import config as cfg
@@ -531,6 +533,15 @@ def main(argv=None):
     if args.notify_smtp:
         import os
 
+        import order_log as ol
+
+        if args.order_log and not args.force_resend and ol.has_already_sent(args.order_log, args.from_date, args.to_date):
+            print(
+                f"\n/!\\ Une commande a deja ete envoyee pour cette fenetre ({args.from_date} -> {args.to_date}) "
+                f"— envoi ignore pour eviter un doublon. Utilisez --force-resend pour passer outre."
+            )
+            return
+
         smtp_username = os.environ.get("SMTP_USERNAME")
         smtp_app_password = os.environ.get("SMTP_APP_PASSWORD")
         smtp_from = os.environ.get("SMTP_FROM", smtp_username)
@@ -550,6 +561,20 @@ def main(argv=None):
         )
         cc_note = f", cc {smtp_cc}" if smtp_cc else ""
         print(f"\nEmail envoye a {smtp_to}{cc_note} (from {smtp_from})")
+
+        if args.order_log:
+            order_number = ol.compute_order_number(date_from, hotel_config.hotel_code)
+            ol.record_sent_order(
+                args.order_log,
+                order_number=order_number,
+                date_sent=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                from_date=args.from_date,
+                to_date=args.to_date,
+                to_email=smtp_to,
+                cc_email=smtp_cc,
+                quantities=quantities,
+            )
+            print(f"Commande enregistree dans le log ({args.order_log}) : {order_number}")
 
 
 if __name__ == "__main__":

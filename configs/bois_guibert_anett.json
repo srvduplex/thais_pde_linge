@@ -32,6 +32,7 @@
   "serviette_code": "0320BE",
   "tapis_bain_code": "0310BE",
   "delivery_weekday": 3,
+  "hotel_code": "CBG",
   "bed_linen_codes_lit90": ["1532AN"],
   "minimum_order_qty": 10,
   "extra_bed_threshold": 3,

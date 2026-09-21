@@ -34,6 +34,7 @@
   "serviette_code": "8785",
   "tapis_bain_code": "8787",
   "delivery_weekday": 4,
+  "hotel_code": "PDE",
   "category_labels": {
     "double": "Chambres Double (lit 140)",
     "twin": "Chambres Twin",
