@@ -1,3 +1,4 @@
+import dataclasses
 import datetime
 import json
 import os
@@ -8,7 +9,10 @@ import linge_commande as lc
 FIXTURE_BOOKINGS = os.path.join(os.path.dirname(__file__), "fixtures", "bookings_semaine.json")
 ELIS_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "configs", "plat_detain_elis.json")
 
-CONFIG = cfg.load_config(ELIS_CONFIG_PATH)
+PDE_CONFIG = cfg.load_config(ELIS_CONFIG_PATH)
+# Regle historique (linge de bain tous les 2 jours) : la plupart des tests
+# ci-dessous verifient le cycle 2 jours / 4 jours sans taux de recouche.
+CONFIG = dataclasses.replace(PDE_CONFIG, bath_stayover_rate=None)
 
 
 def _booking(start_at, end_at, categorie_label, adults=2, children=0, canceled=False, no_show=False, room_label=None):
@@ -405,3 +409,55 @@ def test_build_inventory_request_html_restricts_to_given_codes():
     assert "8786" in html
     assert "1341" not in html  # pas dans le sous-ensemble demande
     assert "8785" not in html
+
+
+def test_plat_detain_config_uses_70_percent_bath_stayover_rate():
+    assert PDE_CONFIG.bath_stayover_rate == 0.7
+
+
+def test_bath_stayover_rate_counts_100_percent_on_arrival_and_rate_on_later_nights():
+    # 3 nuits, 2 occupants, double : nuit 1 = 100 %, nuits 2 et 3 = 70 % chacune
+    config = dataclasses.replace(CONFIG, bath_stayover_rate=0.7)
+    bookings = [_booking("2026-09-13", "2026-09-16", "Chambre Double Supérieur", adults=2)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config
+    )
+
+    assert qty["8786"] == 5  # drap bain : 2 + 0.7*2 + 0.7*2 = 4.8 -> arrondi au-dessus
+    assert qty["8785"] == 5  # serviette : idem
+    assert qty["8787"] == 3  # tapis : 1 + 0.7 + 0.7 = 2.4 -> 3
+    assert qty["2941"] == 1  # linge de lit inchange : mise a blanc nuit 1 seulement
+    assert qty["43128"] == 2
+
+
+def test_bath_stayover_rate_keeps_100_percent_on_mise_a_blanc_nights():
+    # 5 nuits, 1 occupant : nuit 1 et nuit 5 (mise a blanc) = 100 %, nuits 2-4 = 70 %
+    config = dataclasses.replace(CONFIG, bath_stayover_rate=0.7)
+    bookings = [_booking("2026-09-13", "2026-09-18", "Chambre Double Supérieur", adults=1)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config
+    )
+
+    assert qty["8785"] == 5  # 1 + 0.7*3 + 1 = 4.1 -> 5
+    assert qty["2941"] == 2  # mises a blanc nuits 1 et 5
+
+
+def test_bath_stayover_rate_rounds_up_once_on_the_weekly_total_not_per_night():
+    # 10 chambres simples 2 nuits : 10*1 + 10*0.7 = 17 (et pas 10*1 + 10*1 = 20)
+    config = dataclasses.replace(CONFIG, bath_stayover_rate=0.7)
+    bookings = [_booking("2026-09-13", "2026-09-15", "Chambre Double Supérieur", adults=1) for _ in range(10)]
+
+    qty = lc.compute_needs_from_bookings(
+        bookings, datetime.date(2026, 9, 13), datetime.date(2026, 9, 19), config
+    )
+
+    assert qty["8785"] == 17
+    assert all(isinstance(v, int) for v in qty.values())
+
+
+def test_bath_stayover_rate_is_optional_in_config(tmp_path):
+    path = os.path.join(os.path.dirname(__file__), "configs", "bois_guibert_anett.json")
+
+    assert cfg.load_config(path).bath_stayover_rate is None

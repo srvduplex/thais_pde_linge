@@ -32,6 +32,7 @@ class HotelConfig:
     extra_bed_threshold: int | None
     extra_bed_dotation: dict
     minimum_order_qty: int
+    bath_stayover_rate: float | None
     footer_note: str
     signature: str
     supplier_name: str
@@ -63,6 +64,7 @@ def load_config(path: str) -> HotelConfig:
         extra_bed_threshold=data.get("extra_bed_threshold"),
         extra_bed_dotation=data.get("extra_bed_dotation", {}),
         minimum_order_qty=data.get("minimum_order_qty", 0),
+        bath_stayover_rate=data.get("bath_stayover_rate"),
         footer_note=data["footer_note"],
         signature=data["signature"],
         supplier_name=data["supplier_name"],

@@ -15,6 +15,12 @@ confirmer/adapter pour tout autre hotel) :
   eponge, tapis de bain. Le linge de bain suit donc le meme cycle (2 jours)
   quel que soit le jour ; seul le linge de lit attend la mise a blanc (4 jours).
 - Les jours pairs : aucun changement (le linge du dernier passage est garde).
+- Option `bath_stayover_rate` de la config (ex. 0.7 au Plat d'Etain depuis
+  le 2026-10-05) : remplace le cycle 2 jours du linge de BAIN uniquement.
+  Jour d'arrivee et jours de mise a blanc = 100 % ; toutes les autres nuits =
+  ce taux (part estimee des clients en recouche qui demandent un change). Le
+  total est arrondi au-dessus par reference, une seule fois sur la periode.
+  Le linge de lit garde son cycle 4 jours. Sans cette option : cycle 2 jours.
 - Les oreillers (2 taies carrees + 2 taies rectangulaires) sont poses par
   question d'esthetisme des qu'il y a un changement complet du lit, quelle
   que soit la categorie de chambre ou le nombre d'occupants.
@@ -26,6 +32,7 @@ import argparse
 import csv
 import datetime
 import json
+import math
 import sys
 import urllib.error
 import urllib.request
@@ -92,8 +99,10 @@ def compute_needs_from_bookings(
 
                 day_of_stay = (night - start).days + 1
                 kind = stay_night_kind(day_of_stay)
-                if kind == "none":
-                    continue
+                if config.bath_stayover_rate is None:
+                    bath_weight = 0 if kind == "none" else 1
+                else:
+                    bath_weight = 1 if kind == "full" else config.bath_stayover_rate
 
                 if kind == "full":
                     dotation = dict(config.dotation_lit[categorie])
@@ -108,15 +117,16 @@ def compute_needs_from_bookings(
                         for code, unite in config.extra_bed_dotation.items():
                             qty[code] += unite
 
-                if not sans_bain:
-                    # drap de bain = grande serviette : meme cycle 2 jours que
-                    # la serviette eponge et le tapis (full + partiel).
-                    qty[config.drap_bain_code] += occupants
-                    qty[config.serviette_code] += occupants
+                if not sans_bain and bath_weight:
+                    # drap de bain = grande serviette : meme cycle que la
+                    # serviette eponge et le tapis.
+                    qty[config.drap_bain_code] += bath_weight * occupants
+                    qty[config.serviette_code] += bath_weight * occupants
                     if not sans_tapis:
-                        qty[config.tapis_bain_code] += config.tapis_par_categorie[categorie]
+                        qty[config.tapis_bain_code] += bath_weight * config.tapis_par_categorie[categorie]
 
-    return qty
+    # round() avant ceil() pour absorber les erreurs flottantes (17.0000001 -> 17)
+    return {code: math.ceil(round(value, 6)) for code, value in qty.items()}
 
 
 def compute_category_nights(bookings: list, date_from: datetime.date, date_to: datetime.date, config) -> dict:
