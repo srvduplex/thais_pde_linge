@@ -47,4 +47,4 @@ commande linge et les décisions prises au fil des échanges.
 - Au 2026-10-05, quasiment inutilisé (une seule saisie test, chambre 11 Halles, 8-9/09).
 - **Prochaine étape** : Mathieu forme la femme de chambre au module (octobre 2026).
   Après quelques semaines de saisies : relever la correspondance types ↔ références,
-  mesurer le vrai taux de change en recouche et remplacer les 70 % estimés.
+  mesurer le vrai taux de change en recouche et remplacer les 30 % estimés.
