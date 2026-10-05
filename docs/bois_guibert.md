@@ -163,6 +163,10 @@ dans l'écran Thaïs)** :
    en twin et triple).
 3. **Bain dressé pour 2 même avec 1 occupant** : sur 87 départs avec 1 occupant
    réservé, 2 draps de bain et 2 serviettes comptés (le calcul en compte 1).
+   **Décision Mathieu (2026-10-05)** : c'est la pratique qui doit changer, pas
+   le calcul — CBG ne doit dresser le bain que pour 1 personne quand il y a un
+   seul occupant. Calcul inchangé (1 par occupant). À revérifier dans les
+   comptages Thaïs dans quelques semaines.
 4. **Twin le plus souvent fait en lit double** : 51 départs twin en grand drap +
    grande housse contre ~19 en 2 petits lits.
 5. Couverture : 310 départs comptés sur 423 (73 %). 77 comptages tombent le jour
