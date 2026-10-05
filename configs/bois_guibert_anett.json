@@ -26,7 +26,7 @@
     "twin": {"0040BF": 2, "1532AN": 2},
     "triple": {"0050BE": 1, "1533AN1": 1, "1532AN": 1}
   },
-  "tapis_par_categorie": {"double": 1, "twin": 2, "triple": 2},
+  "tapis_par_categorie": {"double": 1, "twin": 1, "triple": 1},
   "taies_fixes": {"0510BV": 2, "0511BS": 2},
   "drap_bain_code": "0300BE",
   "serviette_code": "0320BE",
@@ -35,6 +35,7 @@
   "hotel_code": "CBG",
   "bed_linen_codes_lit90": ["1532AN"],
   "minimum_order_qty": 10,
+  "bath_stayover_rate": 0.2,
   "extra_bed_threshold": 3,
   "extra_bed_dotation": {"0040BF": 1, "1532AN": 1},
   "footer_note": "Hôtel du Château Bois-Guibert — compte Anett S379900.",

@@ -175,3 +175,9 @@ dans l'écran Thaïs)** :
 **2026-10-05 — synthèse de la méthode envoyée à Gwennaëlle** (contact@bois-guibert.com,
 cc Mathieu) : méthode de calcul, constats des comptages Thaïs, consigne « 1 seul
 occupant = bain pour 1 personne », encouragement à continuer la saisie Thaïs.
+
+**2026-10-05 — corrections appliquées à la config** (décision Mathieu, suite à
+l'analyse des comptages) : `bath_stayover_rate: 0.2` (bain 100 % à l'arrivée et
+aux mises à blanc, 20 % les autres nuits, au lieu du cycle 2 jours) et
+`tapis_par_categorie` = 1 tapis par chambre dans toutes les catégories (au lieu
+de 2 en twin/triple). Effet dès la commande du 12/10 (semaine 15→21/10).

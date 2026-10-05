@@ -411,8 +411,8 @@ def test_build_inventory_request_html_restricts_to_given_codes():
     assert "8785" not in html
 
 
-def test_plat_detain_config_uses_70_percent_bath_stayover_rate():
-    assert PDE_CONFIG.bath_stayover_rate == 0.7
+def test_plat_detain_config_uses_30_percent_bath_stayover_rate():
+    assert PDE_CONFIG.bath_stayover_rate == 0.3
 
 
 def test_bath_stayover_rate_counts_100_percent_on_arrival_and_rate_on_later_nights():
@@ -458,6 +458,18 @@ def test_bath_stayover_rate_rounds_up_once_on_the_weekly_total_not_per_night():
 
 
 def test_bath_stayover_rate_is_optional_in_config(tmp_path):
-    path = os.path.join(os.path.dirname(__file__), "configs", "bois_guibert_anett.json")
+    with open(ELIS_CONFIG_PATH, encoding="utf-8") as f:
+        data = json.load(f)
+    del data["bath_stayover_rate"]
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
 
-    assert cfg.load_config(path).bath_stayover_rate is None
+    assert cfg.load_config(str(path)).bath_stayover_rate is None
+
+
+def test_bois_guibert_config_uses_20_percent_and_one_tapis_per_room():
+    path = os.path.join(os.path.dirname(__file__), "configs", "bois_guibert_anett.json")
+    config = cfg.load_config(path)
+
+    assert config.bath_stayover_rate == 0.2
+    assert config.tapis_par_categorie == {"double": 1, "twin": 1, "triple": 1}

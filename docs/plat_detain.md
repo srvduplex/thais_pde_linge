@@ -10,9 +10,9 @@ commande linge et les décisions prises au fil des échanges.
    Le jour de séjour réel compte (jour 1 = arrivée), même si l'arrivée précède la fenêtre.
 3. **Linge de lit** : mise à blanc les jours 1, 5, 9… — dotation par catégorie
    (double / twin / triple) + 2 taies 65x65 + 2 taies 50x80 fixes.
-4. **Linge de bain** (drap de bain, serviette, tapis) — `bath_stayover_rate: 0.7` :
+4. **Linge de bain** (drap de bain, serviette, tapis) — `bath_stayover_rate: 0.3` :
    - jour d'arrivée et jours de mise à blanc : 100 % ;
-   - toutes les autres nuits : **70 %** (part estimée des clients en recouche qui demandent un change) ;
+   - toutes les autres nuits : **30 %** (part estimée des clients en recouche qui demandent un change) ;
    - drap de bain et serviette = nb d'occupants (adultes + enfants), tapis = 1 (double) ou 2 (twin, triple) ;
    - total arrondi au-dessus par référence, une seule fois sur la semaine.
 5. **Ajustements**, dans l'ordre : report de l'écart de la semaine précédente
@@ -31,6 +31,10 @@ commande linge et les décisions prises au fil des échanges.
   l'écart sera repris par le report dans la commande du 12/10.
   Bois Guibert reste sur le cycle 2 jours (option absente de sa config) tant
   que ce n'est pas décidé.
+
+- **2026-10-05 (plus tard) — taux ramené de 70 % à 30 %.** Les comptages Thaïs
+  de Bois Guibert montrent 15-23 % de change bain en recouche ; Mathieu retient
+  30 % pour le Plat d'Étain en attendant ses propres comptages.
 
 ## Module de comptage de linge Thaïs
 
