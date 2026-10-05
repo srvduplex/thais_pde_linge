@@ -171,3 +171,7 @@ dans l'écran Thaïs)** :
    grande housse contre ~19 en 2 petits lits.
 5. Couverture : 310 départs comptés sur 423 (73 %). 77 comptages tombent le jour
    d'arrivée sans départ la veille (chambre préparée avant l'arrivée).
+
+**2026-10-05 — synthèse de la méthode envoyée à Gwennaëlle** (contact@bois-guibert.com,
+cc Mathieu) : méthode de calcul, constats des comptages Thaïs, consigne « 1 seul
+occupant = bain pour 1 personne », encouragement à continuer la saisie Thaïs.
