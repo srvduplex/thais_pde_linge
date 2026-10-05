@@ -130,3 +130,40 @@ premier inventaire réel reçu — état/curseur (`last_inventory_request_bois_g
 3. Une fois un stock de référence connu, ajouter `run_weekly.sh` et
    `run_nightly_check.sh` au cron pour Bois Guibert (avec `--carryover-file`
    comme au Plat d'Étain), sur le cycle lundi/jeudi.
+
+## Module de comptage de linge Thaïs (analyse du 2026-10-05)
+
+Les femmes de chambre de Bois Guibert utilisent le module : 564 comptages sur
+le 07/08 → 04/10, lus en lecture seule via
+`GET /hub/api/partner/hotel/room-states?date=…` (champ `nb_linens`), puis croisés
+avec les réservations (`/hotel/bookings`, jointure sur le libellé de chambre).
+
+**Correspondance des numéros de type, déduite des données (À FAIRE CONFIRMER
+dans l'écran Thaïs)** :
+
+| Type Thaïs | Valeur typique | Hypothèse |
+|---|---|---|
+| 5 | 1 | grand drap (lit double) |
+| 23 | 1 | grande housse de couette |
+| 2 | 1-2 | petit drap (lit 90 : twin séparé, 3e lit) |
+| 20 | 1-2 | petite housse (lit 90) |
+| 8 | 2-3 | taie (type 1) |
+| 24 | 2-3 | taie (type 2) |
+| 11 | 2-3 | drap de bain |
+| 14 | 2-3 | serviette |
+| 17 | 1 | tapis de bain |
+
+**Constats** (écarts avec `configs/bois_guibert_anett.json`, rien n'est modifié) :
+
+1. **Recouche bain ≈ 15-23 %, loin des 70 % estimés au Plat d'Étain.** Sur 151
+   nuits de recouche : 101 comptages, dont 23 avec change bain (23 %) ; si les
+   50 recouches sans comptage = aucun change, 23/151 = 15 %. Linge de lit en
+   recouche : 6 cas seulement.
+2. **Tapis : 1 par chambre** quelle que soit la catégorie (la config compte 2
+   en twin et triple).
+3. **Bain dressé pour 2 même avec 1 occupant** : sur 87 départs avec 1 occupant
+   réservé, 2 draps de bain et 2 serviettes comptés (le calcul en compte 1).
+4. **Twin le plus souvent fait en lit double** : 51 départs twin en grand drap +
+   grande housse contre ~19 en 2 petits lits.
+5. Couverture : 310 départs comptés sur 423 (73 %). 77 comptages tombent le jour
+   d'arrivée sans départ la veille (chambre préparée avant l'arrivée).
