@@ -15,3 +15,5 @@ inventory_cursor_*.txt
 carryover_*.json
 .env.*
 doc/
+extras_*.json
+extras_*.json.envoye-*

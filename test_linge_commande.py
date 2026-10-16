@@ -473,3 +473,13 @@ def test_bois_guibert_config_uses_20_percent_and_one_tapis_per_room():
 
     assert config.bath_stayover_rate == 0.2
     assert config.tapis_par_categorie == {"double": 1, "twin": 1, "triple": 1}
+
+
+def test_load_extras_missing_file_means_no_extras(tmp_path):
+    assert lc.load_extras(tmp_path / "absent.json") == {}
+
+
+def test_load_extras_reads_code_quantity_pairs(tmp_path):
+    p = tmp_path / "extras.json"
+    p.write_text('{"6739": 100, "6820": 200}', encoding="utf-8")
+    assert lc.load_extras(p) == {"6739": 100, "6820": 200}

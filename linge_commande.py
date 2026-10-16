@@ -427,6 +427,16 @@ def send_notification_email(
 # CLI
 # ---------------------------------------------------------------------------
 
+def load_extras(path):
+    """Ajouts ponctuels a la prochaine commande ({code: quantite}), fichier
+    optionnel : absent -> aucun ajout."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return {str(code): int(qty) for code, qty in json.load(f).items()}
+    except FileNotFoundError:
+        return {}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Commande linge — genere le besoin pour un hotel donne")
     parser.add_argument("--config", required=True, metavar="FICHIER", help="Config hotel/fournisseur (configs/*.json)")
@@ -449,6 +459,7 @@ def main(argv=None):
     parser.add_argument("--snapshot-json", metavar="FICHIER", help="Sauvegarde les quantites commandees (hors restaurant) pour la verification nocturne")
     parser.add_argument("--carryover-file", metavar="FICHIER", help="Ajoute l'ecart non couvert de la semaine precedente (calcule par verif_stock.py) et le remet a zero une fois absorbe")
     parser.add_argument("--order-log", metavar="FICHIER", help="Log des commandes envoyees (garde-fou anti-doublon + historique pour controle de facturation)")
+    parser.add_argument("--extras-file", metavar="FICHIER", help="Ajouts ponctuels {code: quantite} pour la prochaine commande ; consomme (renomme) une fois l'envoi fait")
     parser.add_argument("--force-resend", action="store_true", help="Ignore le garde-fou anti-doublon et envoie quand meme")
     args = parser.parse_args(argv)
 
@@ -510,6 +521,12 @@ def main(argv=None):
     quantities["6735"] = args.nappe_12x12
     quantities["6739"] = args.nappe_15x15
     quantities["6820"] = args.serviette_table
+
+    extras = load_extras(args.extras_file) if args.extras_file else {}
+    for code, qty in extras.items():
+        if code not in hotel_config.referentiel:
+            parser.error(f"--extras-file : code {code} absent du referentiel de {hotel_config.hotel_name}")
+        quantities[code] = quantities.get(code, 0) + qty
 
     print(build_recap_table(quantities, hotel_config))
     print()
@@ -585,6 +602,11 @@ def main(argv=None):
                 quantities=quantities,
             )
             print(f"Commande enregistree dans le log ({args.order_log}) : {order_number}")
+
+        if extras:
+            consumed = f"{args.extras_file}.envoye-{args.from_date}"
+            os.rename(args.extras_file, consumed)
+            print(f"Ajouts ponctuels integres a la commande ({args.extras_file} -> {consumed})")
 
 
 if __name__ == "__main__":
