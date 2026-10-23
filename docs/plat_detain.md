@@ -9,7 +9,9 @@ commande linge et les décisions prises au fil des échanges.
 2. **Réservations** : API Thaïs (`/hotel/bookings`), hors annulations et no-shows.
    Le jour de séjour réel compte (jour 1 = arrivée), même si l'arrivée précède la fenêtre.
 3. **Linge de lit** : mise à blanc les jours 1, 5, 9… — dotation par catégorie
-   (double / twin / triple) + 2 taies 65x65 + 2 taies 50x80 fixes.
+   (double / twin / triple) + 3 taies 65x65 + 3 taies 50x80 fixes.
+   Double = drap 310 2 traits (11143) + housse marron ; le drap 280 1 trait (2941)
+   n'est plus commandé.
 4. **Linge de bain** (drap de bain, serviette, tapis) — `bath_stayover_rate: 0.3` :
    - jour d'arrivée et jours de mise à blanc : 100 % ;
    - toutes les autres nuits : **30 %** (part estimée des clients en recouche qui demandent un change) ;
@@ -35,6 +37,16 @@ commande linge et les décisions prises au fil des échanges.
 - **2026-10-05 (plus tard) — taux ramené de 70 % à 30 %.** Les comptages Thaïs
   de Bois Guibert montrent 15-23 % de change bain en recouche ; Mathieu retient
   30 % pour le Plat d'Étain en attendant ses propres comptages.
+
+- **2026-10-23 — Fin du drap 280 « 1 trait » (2941).** À l'étage on ne distingue
+  pas le 280 du 310 ; Mathieu passe tout en 310 « 2 traits » (11143), y compris
+  pour les chambres doubles. Écart de prix négligeable : 1,415 € HT (280) contre
+  1,420 € HT (310) par rotation (facture Elis 2605802-221854 du 26/06/2026,
+  fichier Drive `Cout_linge_par_lit_ELIS.xlsx`). Les 2941 encore en circulation
+  repartent au fil des retours.
+
+- **2026-10-23 — Taies : 3 + 3 par mise à blanc au lieu de 2 + 2.** Le stock de
+  taies tombe à zéro trop vite. Inventaire du 23/10 : 30 de chaque, livraison comprise.
 
 ## Module de comptage de linge Thaïs
 

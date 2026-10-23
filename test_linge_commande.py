@@ -12,7 +12,14 @@ ELIS_CONFIG_PATH = os.path.join(os.path.dirname(__file__), "configs", "plat_deta
 PDE_CONFIG = cfg.load_config(ELIS_CONFIG_PATH)
 # Regle historique (linge de bain tous les 2 jours) : la plupart des tests
 # ci-dessous verifient le cycle 2 jours / 4 jours sans taux de recouche.
-CONFIG = dataclasses.replace(PDE_CONFIG, bath_stayover_rate=None)
+# Dotation historique figee (drap 280 en double, 2+2 taies) : ces tests
+# verifient le moteur, pas les choix courants de la config PDE.
+CONFIG = dataclasses.replace(
+    PDE_CONFIG,
+    bath_stayover_rate=None,
+    dotation_lit={**PDE_CONFIG.dotation_lit, "double": {"2941": 1, "32830": 1}},
+    taies_fixes={"43128": 2, "517": 2},
+)
 
 
 def _booking(start_at, end_at, categorie_label, adults=2, children=0, canceled=False, no_show=False, room_label=None):

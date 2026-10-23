@@ -24,12 +24,12 @@
     "6820": {"designation": "Serviette de table", "dimension": "-", "liseret": "-", "section": "restaurant"}
   },
   "dotation_lit": {
-    "double": {"2941": 1, "32830": 1},
+    "double": {"11143": 1, "32830": 1},
     "twin": {"1341": 2, "41113": 2},
     "triple": {"11143": 1, "1341": 1, "41115": 1, "41113": 1}
   },
   "tapis_par_categorie": {"double": 1, "twin": 2, "triple": 2},
-  "taies_fixes": {"43128": 2, "517": 2},
+  "taies_fixes": {"43128": 3, "517": 3},
   "drap_bain_code": "8786",
   "serviette_code": "8785",
   "tapis_bain_code": "8787",
