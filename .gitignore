@@ -16,4 +16,6 @@ carryover_*.json
 .env.*
 doc/
 extras_*.json
+stock_ponctuel_*.csv*
 extras_*.json.envoye-*
+stock_ponctuel_*.csv*

@@ -460,6 +460,7 @@ def main(argv=None):
     parser.add_argument("--carryover-file", metavar="FICHIER", help="Ajoute l'ecart non couvert de la semaine precedente (calcule par verif_stock.py) et le remet a zero une fois absorbe")
     parser.add_argument("--order-log", metavar="FICHIER", help="Log des commandes envoyees (garde-fou anti-doublon + historique pour controle de facturation)")
     parser.add_argument("--extras-file", metavar="FICHIER", help="Ajouts ponctuels {code: quantite} pour la prochaine commande ; consomme (renomme) une fois l'envoi fait")
+    parser.add_argument("--stock-ponctuel", metavar="FICHIER", help="Stock compte (code;quantite) a deduire une seule fois, a la place du report ; consomme (renomme) une fois l'envoi fait")
     parser.add_argument("--force-resend", action="store_true", help="Ignore le garde-fou anti-doublon et envoie quand meme")
     args = parser.parse_args(argv)
 
@@ -493,7 +494,13 @@ def main(argv=None):
         sans_tapis=args.sans_tapis,
         triple_sans_90=args.triple_sans_90,
     )
-    if args.carryover_file:
+    import os
+
+    stock_ponctuel = args.stock_ponctuel if args.stock_ponctuel and os.path.exists(args.stock_ponctuel) else None
+    if stock_ponctuel:
+        # Un stock reellement compte remplace l'ecart estime par le controle du soir.
+        quantities = apply_stock(quantities, stock_ponctuel)
+    elif args.carryover_file:
         import stock_history as sh
 
         carryover = sh.load_carryover(args.carryover_file)
@@ -607,6 +614,11 @@ def main(argv=None):
             consumed = f"{args.extras_file}.envoye-{args.from_date}"
             os.rename(args.extras_file, consumed)
             print(f"Ajouts ponctuels integres a la commande ({args.extras_file} -> {consumed})")
+
+        if stock_ponctuel:
+            consumed = f"{stock_ponctuel}.envoye-{args.from_date}"
+            os.rename(stock_ponctuel, consumed)
+            print(f"Stock ponctuel deduit de la commande ({stock_ponctuel} -> {consumed})")
 
 
 if __name__ == "__main__":

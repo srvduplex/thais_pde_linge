@@ -490,3 +490,18 @@ def test_load_extras_reads_code_quantity_pairs(tmp_path):
     p = tmp_path / "extras.json"
     p.write_text('{"6739": 100, "6820": 200}', encoding="utf-8")
     assert lc.load_extras(p) == {"6739": 100, "6820": 200}
+
+
+def test_stock_ponctuel_replaces_carryover_and_is_kept_without_send(tmp_path, capsys):
+    carryover = tmp_path / "carryover.json"
+    carryover.write_text('{"517": 500}', encoding="utf-8")
+    stock = tmp_path / "stock_ponctuel.csv"
+    stock.write_text("code;quantite\n517;1000\n", encoding="utf-8")
+    lc.main([
+        "--config", ELIS_CONFIG_PATH, "--from-date", "2026-09-13", "--to-date", "2026-09-19",
+        "--bookings-json", FIXTURE_BOOKINGS,
+        "--carryover-file", str(carryover), "--stock-ponctuel", str(stock),
+    ])
+    recap = capsys.readouterr().out.split("<div>")[0]
+    assert "Taie Am Clas" not in recap  # stock de 1000 deduit, le report de +500 ignore
+    assert stock.exists()  # consomme seulement apres un envoi reel

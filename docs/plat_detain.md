@@ -19,6 +19,10 @@ commande linge et les décisions prises au fil des échanges.
    - total arrondi au-dessus par référence, une seule fois sur la semaine.
 5. **Ajustements**, dans l'ordre : report de l'écart de la semaine précédente
    (contrôle de 22h), stock compté si fourni ponctuellement (`--stock`), minimum Elis de 20.
+   Stock ponctuel : si `stock_ponctuel_plat_detain_elis.csv` existe, le cron du lundi le
+   déduit **à la place** du report (le comptage réel remplace l'écart estimé), puis le
+   renomme `.envoye-<date>` après envoi. On y met le surplus projeté en fin de semaine
+   (stock compté − besoin restant de la semaine en cours), pas le stock brut.
 6. **Envoi** direct à Elis, numéro `semaine/PDE`, garde-fou anti-doublon (`order_log_plat_detain_elis.jsonl`).
 
 ## Décisions
@@ -47,6 +51,11 @@ commande linge et les décisions prises au fil des échanges.
 
 - **2026-10-23 — Taies : 3 + 3 par mise à blanc au lieu de 2 + 2.** Le stock de
   taies tombe à zéro trop vite. Inventaire du 23/10 : 30 de chaque, livraison comprise.
+
+- **2026-10-23 — Inventaire déduit de la commande 44/PDE (30/10→05/11).** Stock
+  compté le 23/10 (+18 draps de bain retrouvés, soit 48) moins le besoin du 23 au 29/10
+  → surplus déduit une fois. Plus 20 taies 65x65 et 20 taies 50x80 en ajout
+  (`extras_plat_detain_elis.json`). Aperçu au 23/10 : seules les taies sont commandées (40 + 40).
 
 ## Module de comptage de linge Thaïs
 

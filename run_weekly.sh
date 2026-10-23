@@ -14,6 +14,7 @@ SLUG="$(basename "${CONFIG_PATH}" .json)"
 CARRYOVER_FILE="carryover_${SLUG}.json"
 ORDER_LOG="order_log_${SLUG}.jsonl"
 EXTRAS_FILE="extras_${SLUG}.json"  # ajouts ponctuels (optionnel), consomme apres envoi
+STOCK_PONCTUEL_FILE="stock_ponctuel_${SLUG}.csv"  # stock compte a deduire une fois (optionnel), consomme apres envoi
 
 set -a
 source "${ENV_FILE}"
@@ -40,4 +41,5 @@ python3 linge_commande.py \
   --snapshot-json "commande_${SLUG}_${DATE_FROM}.json" \
   --carryover-file "${CARRYOVER_FILE}" \
   --order-log "${ORDER_LOG}" \
-  --extras-file "${EXTRAS_FILE}"
+  --extras-file "${EXTRAS_FILE}" \
+  --stock-ponctuel "${STOCK_PONCTUEL_FILE}"
